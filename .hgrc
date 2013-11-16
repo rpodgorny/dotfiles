@@ -1,0 +1,7 @@
+[ui]
+username = Radek Podgorny <radek@podgorny.cz>
+
+[extensions]
+hgext.transplant =
+hgext.graphlog =
+progress =
