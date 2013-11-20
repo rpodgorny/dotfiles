@@ -1,8 +1,17 @@
+set nocompatible
 set encoding=utf-8
-set ts=4
+
+set number
 
 filetype plugin on
+filetype plugin indent off
+set autoindent
+set nocindent
+set noexpandtab
+set ts=4
+
 syntax on
+set background=dark
 
 inoremap <Up> <NOP>
 inoremap <Down> <NOP>
