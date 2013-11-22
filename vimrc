@@ -1,8 +1,6 @@
 set nocompatible
 set encoding=utf-8
 
-set number
-
 filetype plugin on
 filetype plugin indent off
 set autoindent
