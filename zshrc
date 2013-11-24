@@ -41,4 +41,4 @@ prompt_gentoo_setup "$@"
 
 export TERM=linux
 export EDITOR=vim
-export PATH=~/bin:/sbin:/usr/sbin:${PATH}
+export PATH=~/bin:~/scripts:/sbin:/usr/sbin:${PATH}
