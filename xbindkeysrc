@@ -1,8 +1,8 @@
 "quodlibet --play-pause"
-	Control + Alt + End
+	Control + Alt + Home
 
 "quodlibet --next"
-	Control + Alt + Home
+	Control + Alt + End
 
 "amixer sset Master 5%-"
 	Control + Alt + Next
