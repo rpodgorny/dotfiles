@@ -1,0 +1,11 @@
+"quodlibet --play-pause"
+	Control + Alt + End
+
+"quodlibet --next"
+	Control + Alt + Home
+
+"amixer sset Master 5%-"
+	Control + Alt + Next
+
+"amixer sset Master 5%+"
+	Control + Alt + Prior

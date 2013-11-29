@@ -3,4 +3,5 @@
 ln -s dotfiles/hgrc ~/.hgrc
 ln -s dotfiles/tmux.conf ~/.tmux.conf
 ln -s dotfiles/vimrc ~/.vimrc
+ln -s dotfiles/xbindkeysrc ~/.xbindkeysrc
 ln -s dotfiles/zshrc ~/.zshrc
