@@ -9,3 +9,18 @@
 
 "amixer sset Master 5%+"
 	Control + Alt + Prior
+
+"amixer sset Master toggle"
+	XF86AudioMute
+
+"amixer sset Master 1%-"
+	XF86AudioLowerVolume
+
+"amixer sset Master 1%+"
+	XF86AudioRaiseVolume
+
+"xbacklight -20"
+	XF86MonBrightnessDown
+
+"xbacklight +20"
+	XF86MonBrightnessUp
