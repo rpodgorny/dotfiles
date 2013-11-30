@@ -4,6 +4,9 @@
 "quodlibet --next"
 	Control + Alt + End
 
+"quodlibet-delete-current"
+	Control + Alt + Delete + Insert
+
 "amixer sset Master 5%-"
 	Control + Alt + Next
 
