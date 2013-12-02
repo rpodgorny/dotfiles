@@ -39,6 +39,7 @@ prompt_gentoo_setup "$@"
 #prompt gentoo
 #prompt suse
 
-export TERM=linux
+#export TERM=linux
+export TERM=xterm
 export EDITOR=vim
 export PATH=~/bin:~/scripts:/sbin:/usr/sbin:${PATH}
