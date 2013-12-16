@@ -7,6 +7,7 @@ set autoindent
 set nocindent
 set noexpandtab
 set ts=4
+set shiftwidth=4
 
 syntax on
 set background=dark
