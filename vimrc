@@ -1,6 +1,8 @@
 set nocompatible
 set encoding=utf-8
 
+set paste
+
 filetype plugin on
 filetype plugin indent off
 set autoindent
