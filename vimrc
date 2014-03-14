@@ -1,12 +1,21 @@
 set nocompatible
 set encoding=utf-8
 
-set ruler laststatus=2 showcmd showmode
+" this has to be before 'ruler' (and maybe others) - why???
+set paste
+
+set ruler
+set laststatus=2
+set showcmd
+set showmode
 "set number
 
-set incsearch ignorecase smartcase hlsearch
+" better search
+set incsearch
+set ignorecase
+set smartcase
+set hlsearch
 
-set paste
 
 set listchars=tab:>-,trail:-,nbsp:%,eol:$
 
