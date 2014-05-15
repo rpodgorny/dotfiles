@@ -6,6 +6,7 @@ ln -s dotfiles/tmux.conf ~/.tmux.conf
 ln -s dotfiles/vimrc ~/.vimrc
 ln -s dotfiles/xbindkeysrc ~/.xbindkeysrc
 ln -s dotfiles/zshrc ~/.zshrc
+ln -s dotfiles/zprofile ~/.zprofile
 
 mkdir -p ~/.i3
 ln -s ../dotfiles/i3_config ~/.i3/config
