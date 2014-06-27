@@ -16,6 +16,7 @@ set ignorecase
 set smartcase
 set hlsearch
 
+set scrolloff=5
 
 set listchars=tab:>-,trail:-,nbsp:%,eol:$
 
