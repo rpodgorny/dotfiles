@@ -2,7 +2,8 @@ set nocompatible
 set encoding=utf-8
 
 " this has to be before 'ruler' (and maybe others) - why???
-set paste
+" actually don't set this as it conflicts with youcompleteme tab completion
+" set paste
 
 set ruler
 set laststatus=2
