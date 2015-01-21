@@ -8,5 +8,12 @@ ln -s dotfiles/xbindkeysrc ~/.xbindkeysrc
 ln -s dotfiles/zshrc ~/.zshrc
 ln -s dotfiles/zprofile ~/.zprofile
 
+
+mkdir -p ~/.ssh
+ln -s ../dotfiles/ssh_config ~/.ssh/config
+
 mkdir -p ~/.i3
 ln -s ../dotfiles/i3_config ~/.i3/config
+
+mkdir -p ~/.gnupg
+ln -s ../dotfiles/gpg.conf ~/.gnupg/gpg.conf

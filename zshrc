@@ -11,6 +11,13 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
+alias less="less -R"
+alias ll="ls -l"
+alias lo="ls -o"
+alias lh="ls -lh"
+alias la="ls -la"
+alias man="man -a"
+
 prompt_gentoo_setup () {
 	prompt_gentoo_prompt=${1:-'blue'}
 	prompt_gentoo_user=${2:-'green'}

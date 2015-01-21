@@ -1,0 +1,4 @@
+ServerAliveInterval 10
+ServerAliveCountMax 60
+
+VerifyHostKeyDNS yes
