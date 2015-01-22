@@ -1,0 +1,58 @@
+#!/usr/bin/python3
+
+import logging
+import subprocess
+import filecmp
+import os
+
+
+def do(from_, to_):
+	from_ = os.path.expanduser(from_)
+	to_ = os.path.expanduser(to_)
+
+	if os.path.islink(to_):
+		logging.debug('%s already a symlink' % to_)
+		return
+	#endif
+
+	if os.path.isfile(to_):
+		logging.info('%s already exists but is not a symlink' % to_)
+
+		fn_rel = os.path.dirname(to_) + '/' + from_
+		if filecmp.cmp(fn_rel, to_):
+			logging.info('file contents are same, deleting %s' % to_)
+			os.remove(to_)
+		else:
+			logging.info('file contents differ, leaving %s intact' % to_)
+			return
+		#endif
+	#endif
+
+	logging.info('linking %s to %s' % (from_, to_))
+
+	os.makedirs(os.path.dirname(to_), exist_ok=True)
+	cmd = 'ln -s %s %s' % (from_, to_)
+	subprocess.call(cmd, shell=True)
+#enddef
+
+
+def main():
+	logging.basicConfig(level='INFO')
+
+	do('dotfiles/hgrc', '~/.hgrc')
+	do('dotfiles/gitconfig', '~/.gitconfig')
+	do('dotfiles/tmux.conf', '~/.tmux.conf')
+	do('dotfiles/vimrc', '~/.vimrc')
+	do('dotfiles/xbindkeysrc', '~/.xbindkeysrc')
+	do('dotfiles/zshrc', '~/.zshrc')
+	do('dotfiles/zprofile', '~/.zprofile')
+
+	do('../dotfiles/ssh_config', '~/.ssh/config')
+	do('../dotfiles/i3_config', '~/.i3/config')
+	do('../dotfiles/gpg.conf', '~/.gnupg/gpg.conf')
+#enddef
+
+
+if __name__ == '__main__':
+	main()
+#endif
