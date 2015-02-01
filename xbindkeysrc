@@ -27,3 +27,6 @@
 
 "xbacklight +20"
 	XF86MonBrightnessUp
+
+"killall omxplayer.bin"
+	Control + Alt + k
