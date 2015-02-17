@@ -29,6 +29,11 @@ set noexpandtab
 set tabstop=4
 set shiftwidth=4
 
+" show trailing whitespace
+" http://vim.wikia.com/wiki/Highlight_unwanted_spaces
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
 syntax on
 set background=dark
 
