@@ -42,6 +42,7 @@ def main():
 	do('dotfiles/hgrc', '~/.hgrc')
 	do('dotfiles/gitconfig', '~/.gitconfig')
 	do('dotfiles/makepkg.conf', '~/.makepkg.conf')
+	do('dotfiles/omnirun.conf', '~/.omnirun.conf')
 	do('dotfiles/tmux.conf', '~/.tmux.conf')
 	do('dotfiles/vimrc', '~/.vimrc')
 	do('dotfiles/xbindkeysrc', '~/.xbindkeysrc')
