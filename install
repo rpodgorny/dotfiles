@@ -56,6 +56,7 @@ def main():
 	do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
 	do('../../../dotfiles/fish_prompt.fish', '~/.config/fish/functions/fish_prompt.fish')
 	do('../../../dotfiles/fish_right_prompt.fish', '~/.config/fish/functions/fish_right_prompt.fish')
+	do('../../../dotfiles/__fish_print_hostnames.fish', '~/.config/fish/functions/__fish_print_hostnames.fish')
 #enddef
 
 
