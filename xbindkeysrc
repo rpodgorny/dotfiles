@@ -16,17 +16,20 @@
 "amixer sset Master toggle"
 	XF86AudioMute
 
-"amixer sset Master 1%-"
+"amixer sset Master 5%-"
 	XF86AudioLowerVolume
 
-"amixer sset Master 1%+"
+"amixer sset Master 5%+"
 	XF86AudioRaiseVolume
 
-"xbacklight -20"
+"xbacklight -10"
 	XF86MonBrightnessDown
 
-"xbacklight +20"
+"xbacklight +10"
 	XF86MonBrightnessUp
+
+"xinput set-prop 6 272 0"
+	Control + Alt + m
 
 "killall omxplayer.bin"
 	Control + Alt + k
