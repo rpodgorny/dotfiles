@@ -30,7 +30,10 @@ def do(from_, to_):
 
 	logging.info('linking %s to %s' % (from_, to_))
 
-	os.makedirs(os.path.dirname(to_), exist_ok=True)
+	# the try/except stuff is here only because of python 3.2
+	try: os.makedirs(os.path.dirname(to_), exist_ok=True)
+	except: pass
+
 	cmd = 'ln -s %s %s' % (from_, to_)
 	subprocess.call(cmd, shell=True)
 #enddef
