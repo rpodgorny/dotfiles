@@ -30,7 +30,10 @@ def do(from_, to_):
 
 	logging.info('linking %s to %s' % (from_, to_))
 
-	os.makedirs(os.path.dirname(to_), exist_ok=True)
+	# the try/except stuff is here only because of python 3.2
+	try: os.makedirs(os.path.dirname(to_), exist_ok=True)
+	except: pass
+
 	cmd = 'ln -s %s %s' % (from_, to_)
 	subprocess.call(cmd, shell=True)
 #enddef
@@ -50,6 +53,9 @@ def main():
 	do('dotfiles/zprofile', '~/.zprofile')
 
 	do('../dotfiles/ssh_config', '~/.ssh/config')
+	do('../dotfiles/id_rsa_aur', '~/.ssh/id_rsa_aur')
+	do('../dotfiles/id_rsa_aur.pub', '~/.ssh/id_rsa_aur.pub')
+
 	do('../dotfiles/i3_config', '~/.i3/config')
 	do('../dotfiles/gpg.conf', '~/.gnupg/gpg.conf')
 
