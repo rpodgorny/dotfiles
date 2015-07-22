@@ -58,6 +58,7 @@ def main():
 
 	do('../dotfiles/i3_config', '~/.i3/config')
 	do('../dotfiles/gpg.conf', '~/.gnupg/gpg.conf')
+	do('../dotfiles/default.tigervnc', '~/.vnc/default.tigervnc')
 
 	do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
 	do('../../../dotfiles/fish_prompt.fish', '~/.config/fish/functions/fish_prompt.fish')
