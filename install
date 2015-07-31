@@ -42,6 +42,7 @@ def do(from_, to_):
 def main():
 	logging.basicConfig(level='INFO')
 
+	do('dotfiles/emacs', '~/.emacs')
 	do('dotfiles/hgrc', '~/.hgrc')
 	do('dotfiles/gitconfig', '~/.gitconfig')
 	do('dotfiles/makepkg.conf', '~/.makepkg.conf')
