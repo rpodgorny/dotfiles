@@ -143,9 +143,11 @@ bar {
 
 for_window [class="^.*"] border pixel 1
 
-assign [class="Thunderbird"] "8:mail"
-assign [class="Chromium"] "9:web"
-assign [class="Firefox"] "9:web"
+assign [class="Thunderbird"] "8"
+assign [class="Chrome"] "9"
+assign [class="Chromium"] "9"
+assign [class="chromium"] "9"
+assign [class="Firefox"] "9"
 
 bindsym $mod+Shift+t exec i3-input -F 'rename workspace to "%s"'
 
