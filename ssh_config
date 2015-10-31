@@ -3,5 +3,5 @@ ServerAliveCountMax 60
 
 VerifyHostKeyDNS yes
 
-Host aur4.archlinux.org
+Host aur.archlinux.org
 	IdentityFile ~/.ssh/id_rsa_aur
