@@ -36,6 +36,7 @@
 (setq column-number-mode t)
 (setq vc-diff-switches "-u")
 
+(global-auto-revert-mode t)
 (delete-selection-mode t)
 (show-paren-mode t)
 (which-function-mode t)
