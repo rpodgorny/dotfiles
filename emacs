@@ -35,6 +35,8 @@
 (setq delete-auto-save-files t)
 (setq column-number-mode t)
 (setq vc-diff-switches "-u")
+(setq echo-keystrokes 0.1)
+(setq use-dialog-box nil)
 
 (global-auto-revert-mode t)
 (delete-selection-mode t)
@@ -64,21 +66,37 @@
   (load-theme 'spacemacs-dark t)
 ;)
 
-(use-package helm)
-(require 'helm-config)
-(setq helm-split-window-in-side-p t)
-(setq helm-ff-file-name-history-use-recentf t)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
+(use-package helm
+  :config
+    (require 'helm-config)
+    (setq helm-split-window-in-side-p t)
+    (setq helm-ff-file-name-history-use-recentf t)
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+    (define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
+    (add-hook 'helm-grep-mode-hook (lambda () (grep-mode)))
+  :bind (
+    ("M-x" . helm-M-x)
+    ("C-x b" . helm-buffers-list)  ;; same as helm-mini?
+    ("C-x C-f" . helm-find-files)
+    ("C-h a" . helm-apropos)
+    ("C-." . helm-imenu-in-all-buffers)
+    ("M-y" . helm-show-kill-ring)
+    ("C-c h" . helm-command-prefix)
+    ("C-c <SPC>" . helm-all-mark-rings)
+  )
+)
 (helm-mode 1)
-; override some emacs defaults with helm's version
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-h a") 'helm-apropos)
 
-;(use-package smart-mode-line)
+(use-package ag)
+(use-package helm-ag
+  ;; :init
+  ;; (setq helm-ag-fuzzy-match t)
+  :config
+    (setq helm-ag-base-command "ag --smart-case --nocolor --nogroup")
+    (setq helm-ag-insert-at-point 'symbol)
+    (add-hook 'helm-ag-mode-hook (lambda () (grep-mode)))
+)
 
 ;(use-package smart-tabs-mode)
 ;(smart-tabs-insinuate 'c 'javascript 'python)
