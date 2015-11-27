@@ -44,9 +44,12 @@
 (which-function-mode t)
 
 (menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
 (global-linum-mode 1)
+
+(when window-system
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+)
 
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
@@ -145,6 +148,15 @@
   :config
   (setq sml/no-confirm-load-theme t)
   (sml/setup)
+)
+
+(use-package pkgbuild-mode)
+;(autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
+(setq auto-mode-alist
+  (append
+    '(("/PKGBUILD$" . pkgbuild-mode))
+    auto-mode-alist
+  )
 )
 
 (custom-set-variables
