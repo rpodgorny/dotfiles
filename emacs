@@ -55,6 +55,11 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+(global-set-key (kbd "M-o") 'other-window)
+
+(use-package saveplace
+  :init (setq-default save-place t))
+
 ;(use-package evil)
 ;(require 'evil)
 ;(evil-mode t)
@@ -98,8 +103,28 @@
     (add-hook 'helm-ag-mode-hook (lambda () (grep-mode)))
 )
 
+(use-package guide-key)
+(setq guide-key/guide-key-sequence t)
+(setq guide-key/popup-window-position 'bottom)
+(guide-key-mode 1)
+
 ;(use-package smart-tabs-mode)
 ;(smart-tabs-insinuate 'c 'javascript 'python)
+
+(use-package projectile)
+(projectile-global-mode)
+
+;(use-package auto-complete)
+;(global-auto-complete-mode)
+;(setq ac-show-menu-immediately-on-auto-complete t)
+
+;(use-package company)
+;(global-company-mode)
+
+;(use-package flycheck)
+;(global-flycheck-mode)
+
+(use-package magit)
 
 (add-hook 'python-mode-hook
   (lambda ()
