@@ -39,6 +39,7 @@
 (setq use-dialog-box nil)
 
 (global-auto-revert-mode t)
+(desktop-save-mode 1)
 (delete-selection-mode t)
 (show-paren-mode t)
 (which-function-mode t)
@@ -59,26 +60,32 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (global-set-key (kbd "M-o") 'other-window)
-
-(use-package saveplace
-  :init (setq-default save-place t))
+(global-set-key (kbd "C-c C-g") 'goto-line)
 
 ;(use-package evil)
 ;(require 'evil)
 ;(evil-mode t)
 
 ;(use-package solarized-theme)
+;(load-theme 'solarized-dark t)
 (use-package spacemacs-theme)
-;(when window-system
-  ;(load-theme 'solarized-dark t)
-  (load-theme 'spacemacs-dark t)
-;)
+(load-theme 'spacemacs-dark t)
+
+(semantic-mode 1)
+
+(use-package saveplace
+  :init (setq-default save-place t)
+)
 
 (use-package helm
+  :diminish helm-mode
+  :init (helm-mode 1)
   :config
     (require 'helm-config)
     (setq helm-split-window-in-side-p t)
     (setq helm-ff-file-name-history-use-recentf t)
+	(helm-push-mark-mode 1)
+	(define-key global-map [remap list-buffers] 'helm-buffers-list)
     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
     (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
     (define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
@@ -94,28 +101,64 @@
     ("C-c <SPC>" . helm-all-mark-rings)
   )
 )
-(helm-mode 1)
 
-(use-package ag)
 (use-package helm-ag
-  ;; :init
-  ;; (setq helm-ag-fuzzy-match t)
+  :defer t
+;;  :init
+;;  (setq helm-ag-fuzzy-match t)
   :config
+    (use-package ag)
     (setq helm-ag-base-command "ag --smart-case --nocolor --nogroup")
     (setq helm-ag-insert-at-point 'symbol)
     (add-hook 'helm-ag-mode-hook (lambda () (grep-mode)))
 )
 
-(use-package guide-key)
-(setq guide-key/guide-key-sequence t)
-(setq guide-key/popup-window-position 'bottom)
-(guide-key-mode 1)
+(global-set-key (kbd "M-g") (lambda ()
+                              (interactive)
+                              (helm-do-ag (projectile-project-root))))
+
+(global-set-key (kbd "M-G") (lambda ()
+                              (interactive)
+                              (helm-do-ag (helm-current-directory))))
+
+(use-package helm-projectile)
+(setq helm-projectile-fuzzy-match nil)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+(defun my-helm-projectile-buffers-list ()
+  (interactive)
+  (unless helm-source-buffers-list
+    (setq helm-source-buffers-list
+          (helm-make-source "Buffers" 'helm-source-buffers)))
+  (helm :sources '(helm-source-buffers-list
+                   helm-source-projectile-recentf-list
+                   helm-source-projectile-files-list
+                   helm-source-recentf
+                   helm-source-buffer-not-found)
+        :buffer "*helm buffers*"
+        :keymap helm-buffer-map
+        :truncate-lines helm-buffers-truncate-lines))
+
+(global-set-key (kbd "C-c C-f") 'helm-projectile-find-file)
+(global-set-key (kbd "C-x b") 'my-helm-projectile-buffers-list)
+
+(use-package guide-key
+  :diminish guide-key-mode
+  :init (guide-key-mode 1)
+  :config
+    (setq guide-key/guide-key-sequence t)
+    (setq guide-key/popup-window-position 'bottom)
+)
 
 ;(use-package smart-tabs-mode)
 ;(smart-tabs-insinuate 'c 'javascript 'python)
 
-(use-package projectile)
-(projectile-global-mode)
+(use-package projectile
+  :diminish projectile-mode
+  :config
+    (projectile-global-mode)
+)
 
 ;(use-package auto-complete)
 ;(global-auto-complete-mode)
@@ -128,6 +171,18 @@
 ;(global-flycheck-mode)
 
 (use-package magit)
+
+(use-package elpy
+  :commands (eply-enable)
+)
+
+(use-package whitespace
+  :diminish whitespace-mode
+  :config
+    (setq whitespace-line-column 80)
+    (setq whitespace-style '(face trailing newline))
+    (add-hook 'prog-mode-hook 'whitespace-mode)
+)
 
 (add-hook 'python-mode-hook
   (lambda ()
@@ -142,21 +197,20 @@
 ;(setq jedi:setup-keys t)
 ;(setq jedi:complete-on-dot t)
 
-(use-package rainbow-mode)
+(use-package rainbow-mode
+  :defer t
+;;  :diminish rainbow-mode
+)
 
 (use-package smart-mode-line
   :config
-  (setq sml/no-confirm-load-theme t)
-  (sml/setup)
+    (setq sml/no-confirm-load-theme t)
+    (sml/setup)
 )
 
-(use-package pkgbuild-mode)
-;(autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
-(setq auto-mode-alist
-  (append
-    '(("/PKGBUILD$" . pkgbuild-mode))
-    auto-mode-alist
-  )
+(use-package pkgbuild-mode
+  :defer t
+  :config (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode)) auto-mode-alist))
 )
 
 (custom-set-variables
@@ -174,3 +228,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
