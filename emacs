@@ -37,6 +37,8 @@
 (setq vc-diff-switches "-u")
 (setq echo-keystrokes 0.1)
 (setq use-dialog-box nil)
+(setq compilation-always-kill t)
+(setq compilation-scroll-output 'first-error)
 
 (global-auto-revert-mode t)
 (desktop-save-mode 1)
@@ -59,8 +61,24 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, copy a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "C-c C-g") 'goto-line)
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;(use-package evil)
 ;(require 'evil)
@@ -174,6 +192,8 @@
 
 (use-package elpy
   :commands (eply-enable)
+  :config
+    (remove-hook 'elpy-modules 'elpy-module-yasnippet)
 )
 
 (use-package whitespace
@@ -189,6 +209,7 @@
     (setq indent-tabs-mode t)
     (setq tab-width 4)
     (setq python-indent-offset 4)
+	(elpy-enable)
   )
 )
 
