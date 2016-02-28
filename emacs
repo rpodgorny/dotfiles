@@ -89,7 +89,7 @@
 
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "C-c C-g") 'goto-line)
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 
 ;(use-package evil)
 ;(require 'evil)
