@@ -58,7 +58,7 @@
 (which-function-mode t)
 
 (menu-bar-mode -1)
-(global-linum-mode 1)
+;(global-linum-mode 1)
 
 (when window-system
   (scroll-bar-mode -1)
