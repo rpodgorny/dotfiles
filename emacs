@@ -245,6 +245,7 @@
   :config (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode)) auto-mode-alist))
 )
 
+; stolen from libor
 (defun dos2unix ()
   (interactive)
   (save-excursion
