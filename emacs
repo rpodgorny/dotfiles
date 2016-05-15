@@ -256,6 +256,17 @@
   )
 )
 
+; yeah, i know, it sucks. but hey, it's my first function ever! ;-)
+(defun update-packages ()
+  (interactive)
+  (save-excursion
+    (package-list-packages)
+    (package-menu-mark-upgrades)
+	(package-menu-execute t)
+	(kill-buffer)
+  )
+)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
