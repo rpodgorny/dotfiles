@@ -63,6 +63,7 @@
 (when window-system
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
+  ;(set-frame-font "mononoki-12")
 )
 
 (setq scroll-step 1)
@@ -104,6 +105,10 @@
 
 (use-package saveplace
   :init (setq-default save-place t)
+)
+
+(use-package expand-region
+  :config (global-set-key (kbd "C-=") 'er/expand-region)
 )
 
 (use-package helm
@@ -245,6 +250,10 @@
   :config (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode)) auto-mode-alist))
 )
 
+(use-package dumb-jump
+  :config (dumb-jump-mode)
+)
+
 ; stolen from libor
 (defun dos2unix ()
   (interactive)
@@ -266,6 +275,26 @@
 	(kill-buffer)
   )
 )
+
+; well, this is the second one. i know, still sucky... ;-)
+(defun downcase-word-or-region ()
+  (interactive)
+  (if mark-active
+    (downcase-region (region-beginning) (region-end))
+    (call-interactively 'downcase-word)
+  )
+)
+
+(defun upcase-word-or-region ()
+  (interactive)
+  (if mark-active
+    (upcase-region (region-beginning) (region-end))
+    (call-interactively 'upcase-word)
+  )
+)
+
+(global-set-key (kbd "M-l") 'downcase-word-or-region)
+(global-set-key (kbd "M-u") 'upcase-word-or-region)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
