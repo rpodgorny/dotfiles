@@ -204,7 +204,13 @@
 ;(use-package flycheck)
 ;(global-flycheck-mode)
 
-(use-package magit)
+(use-package magit
+  :defer t
+)
+
+(use-package hy-mode
+  :defer t
+)
 
 (use-package elpy
   :commands (eply-enable)
@@ -237,6 +243,11 @@
 (use-package rainbow-mode
   :defer t
 ;;  :diminish rainbow-mode
+)
+
+(use-package rainbow-delimiters
+  :defer t
+  :diminish rainbow-delimiters-mode
 )
 
 (use-package smart-mode-line
