@@ -28,7 +28,13 @@
 "xbacklight +10"
 	XF86MonBrightnessUp
 
-"xinput set-prop 6 272 0"
+"sudo asus-kbd-backlight down"
+	XF86KbdBrightnessDown
+
+"sudo asus-kbd-backlight up"
+	XF86KbdBrightnessUp
+
+"xinput set-prop 12 281 0"
 	Control + Alt + m
 
 "killall omxplayer.bin"
