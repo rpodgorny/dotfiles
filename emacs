@@ -196,8 +196,14 @@
 ;(global-flycheck-mode)
 
 (use-package magit
-  :defer t
-)
+  :defer t)
+
+(use-package cider
+  :defer t)
+
+; TODO: i propably need to remap some key bindings and/or commands to make use of this
+(use-package helm-cider
+  :defer t)
 
 (use-package hy-mode
   :defer t)
