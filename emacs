@@ -225,9 +225,13 @@
     (setq indent-tabs-mode t)
     (setq tab-width 4)
     (setq python-indent-offset 4)
-	(elpy-enable)
-  )
-)
+	(elpy-enable)))
+
+(add-hook 'pascal-mode-hook
+  (lambda ()
+    (setq indent-tabs-mode nil)
+	(setq tab-width 2)
+	(setq pascal-indent-level 2)))
 
 ;(autoload 'jedi:setup "jedi" nil t)
 ;(add-hook 'python-mode-hook 'jedi:setup)
