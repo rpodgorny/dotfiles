@@ -19,9 +19,7 @@
 (if (not (package-installed-p 'use-package))
   (progn
     (package-refresh-contents)
-    (package-install 'use-package)
-  )
-)
+    (package-install 'use-package)))
 
 (eval-when-compile (require 'use-package))
 (setq use-package-always-ensure t)
@@ -104,12 +102,10 @@
 (semantic-mode 1)
 
 (use-package saveplace
-  :init (setq-default save-place t)
-)
+  :init (setq-default save-place t))
 
 (use-package expand-region
-  :config (global-set-key (kbd "C-=") 'er/expand-region)
-)
+  :config (global-set-key (kbd "C-=") 'er/expand-region))
 
 (use-package helm
   :diminish helm-mode
@@ -132,9 +128,7 @@
     ("C-." . helm-imenu-in-all-buffers)
     ("M-y" . helm-show-kill-ring)
     ("C-c h" . helm-command-prefix)
-    ("C-c <SPC>" . helm-all-mark-rings)
-  )
-)
+    ("C-c <SPC>" . helm-all-mark-rings)))
 
 (use-package helm-ag
   :defer t
@@ -144,8 +138,7 @@
     (use-package ag)
     (setq helm-ag-base-command "ag --smart-case --nocolor --nogroup")
     (setq helm-ag-insert-at-point 'symbol)
-    (add-hook 'helm-ag-mode-hook (lambda () (grep-mode)))
-)
+    (add-hook 'helm-ag-mode-hook (lambda () (grep-mode))))
 
 (global-set-key (kbd "M-g") (lambda ()
                               (interactive)
@@ -182,8 +175,7 @@
   :init (guide-key-mode 1)
   :config
     (setq guide-key/guide-key-sequence t)
-    (setq guide-key/popup-window-position 'bottom)
-)
+    (setq guide-key/popup-window-position 'bottom))
 
 ;(use-package smart-tabs-mode)
 ;(smart-tabs-insinuate 'c 'javascript 'python)
@@ -191,8 +183,7 @@
 (use-package projectile
   :diminish projectile-mode
   :config
-    (projectile-global-mode)
-)
+    (projectile-global-mode))
 
 ;(use-package auto-complete)
 ;(global-auto-complete-mode)
@@ -209,22 +200,19 @@
 )
 
 (use-package hy-mode
-  :defer t
-)
+  :defer t)
 
 (use-package elpy
   :commands (eply-enable)
   :config
-    (remove-hook 'elpy-modules 'elpy-module-yasnippet)
-)
+    (remove-hook 'elpy-modules 'elpy-module-yasnippet))
 
 (use-package whitespace
   :diminish whitespace-mode
   :config
     (setq whitespace-line-column 80)
     (setq whitespace-style '(face trailing newline))
-    (add-hook 'prog-mode-hook 'whitespace-mode)
-)
+    (add-hook 'prog-mode-hook 'whitespace-mode))
 
 (add-hook 'python-mode-hook
   (lambda ()
@@ -242,28 +230,23 @@
 
 (use-package rainbow-mode
   :defer t
-;;  :diminish rainbow-mode
-)
+  :diminish rainbow-mode)
 
 (use-package rainbow-delimiters
   :defer t
-  :diminish rainbow-delimiters-mode
-)
+  :diminish rainbow-delimiters-mode)
 
 (use-package smart-mode-line
   :config
     (setq sml/no-confirm-load-theme t)
-    (sml/setup)
-)
+    (sml/setup))
 
 (use-package pkgbuild-mode
   :defer t
-  :config (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode)) auto-mode-alist))
-)
+  :config (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode)) auto-mode-alist)))
 
 (use-package dumb-jump
-  :config (dumb-jump-mode)
-)
+  :config (dumb-jump-mode))
 
 ; stolen from libor
 (defun dos2unix ()
@@ -271,38 +254,30 @@
   (save-excursion
     (goto-char (point-min))
     (while (search-forward (string ?\C-m) nil t)
-      (replace-match "" nil t)
-	)
-  )
-)
+      (replace-match "" nil t))))
 
 ; yeah, i know, it sucks. but hey, it's my first function ever! ;-)
 (defun update-packages ()
   (interactive)
   (save-excursion
-    (package-list-packages)
-    (package-menu-mark-upgrades)
-	(package-menu-execute t)
-	(kill-buffer)
-  )
-)
+    (let ((package-menu-async nil))
+	  (package-list-packages)
+	  (package-menu-mark-upgrades)
+      (package-menu-execute t)
+	  (kill-buffer))))
 
 ; well, this is the second one. i know, still sucky... ;-)
 (defun downcase-word-or-region ()
   (interactive)
   (if mark-active
     (downcase-region (region-beginning) (region-end))
-    (call-interactively 'downcase-word)
-  )
-)
+    (call-interactively 'downcase-word)))
 
 (defun upcase-word-or-region ()
   (interactive)
   (if mark-active
     (upcase-region (region-beginning) (region-end))
-    (call-interactively 'upcase-word)
-  )
-)
+    (call-interactively 'upcase-word)))
 
 (global-set-key (kbd "M-l") 'downcase-word-or-region)
 (global-set-key (kbd "M-u") 'upcase-word-or-region)
