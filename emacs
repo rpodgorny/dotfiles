@@ -213,6 +213,9 @@
   :config
     (remove-hook 'elpy-modules 'elpy-module-yasnippet))
 
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt --pprint")
+
 (use-package whitespace
   :diminish whitespace-mode
   :config
