@@ -16,10 +16,10 @@
 "amixer sset Master toggle"
 	XF86AudioMute
 
-"amixer sset Master 5%-"
+"amixer sset Master 2%-"
 	XF86AudioLowerVolume
 
-"amixer sset Master 5%+"
+"amixer sset Master 2%+"
 	XF86AudioRaiseVolume
 
 "xbacklight -10"
