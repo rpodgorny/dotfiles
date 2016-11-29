@@ -1,6 +1,6 @@
 TigerVNC Configuration file Version 1.0
 
-ServerName=lbalanda.asterix.cz
+ServerName=manasek.asterix.cz
 X509CA=
 X509CRL=
 SecurityTypes=X509Plain,TLSPlain,X509Vnc,TLSVnc,X509None,TLSNone,VncAuth,None
