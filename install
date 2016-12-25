@@ -13,7 +13,6 @@ def do(from_, to_):
 	if os.path.islink(to_):
 		logging.debug('%s already a symlink' % to_)
 		return
-	#endif
 
 	if os.path.isfile(to_):
 		logging.info('%s already exists but is not a symlink' % to_)
@@ -25,18 +24,17 @@ def do(from_, to_):
 		else:
 			logging.info('file contents differ, leaving %s intact' % to_)
 			return
-		#endif
-	#endif
 
 	logging.info('linking %s to %s' % (from_, to_))
 
 	# the try/except stuff is here only because of python 3.2
-	try: os.makedirs(os.path.dirname(to_), exist_ok=True)
-	except: pass
+	try:
+		os.makedirs(os.path.dirname(to_), exist_ok=True)
+	except:
+		pass
 
 	cmd = 'ln -s %s %s' % (from_, to_)
 	subprocess.call(cmd, shell=True)
-#enddef
 
 
 def main():
@@ -67,9 +65,7 @@ def main():
 	do('../../../dotfiles/fish_prompt.fish', '~/.config/fish/functions/fish_prompt.fish')
 	do('../../../dotfiles/fish_right_prompt.fish', '~/.config/fish/functions/fish_right_prompt.fish')
 	do('../../../dotfiles/__fish_print_hostnames.fish', '~/.config/fish/functions/__fish_print_hostnames.fish')
-#enddef
 
 
 if __name__ == '__main__':
 	main()
-#endif
