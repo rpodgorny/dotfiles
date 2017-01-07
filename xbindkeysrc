@@ -22,10 +22,10 @@
 "amixer sset Master 2%+"
 	XF86AudioRaiseVolume
 
-"xbacklight -10"
+"xbacklight_helper dec 10"
 	XF86MonBrightnessDown
 
-"xbacklight +10"
+"xbacklight_helper inc 10"
 	XF86MonBrightnessUp
 
 "sudo asus-kbd-backlight down"
