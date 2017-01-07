@@ -22,3 +22,5 @@ set fish_color_search_match --background=purple
 set fish_color_status red
 set fish_color_user '-o' 'green'
 set fish_color_valid_path --underline
+
+source /usr/share/autojump/autojump.fish
