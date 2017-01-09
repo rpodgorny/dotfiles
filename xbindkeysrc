@@ -22,16 +22,18 @@
 "amixer sset Master 2%+"
 	XF86AudioRaiseVolume
 
-"xbacklight -10"
+#"xbacklight -5; notify-send -t 1000 $(xbacklight)"
+"xbacklight_helper dec 10; killall osd_cat; osd_cat -p middle -A center -b percentage -P $(xbacklight) -T $(xbacklight)"
 	XF86MonBrightnessDown
 
-"xbacklight +10"
+#"xbacklight +5; notify-send -t 1000 $(xbacklight)"
+"xbacklight_helper inc 10; killall osd_cat; osd_cat -p middle -A center -b percentage -P $(xbacklight) -T $(xbacklight)"
 	XF86MonBrightnessUp
 
-"sudo asus-kbd-backlight down"
+"sudo asus-kbd-backlight down; notify-send -t 1000 $(asus-kbd-backlight show)"
 	XF86KbdBrightnessDown
 
-"sudo asus-kbd-backlight up"
+"sudo asus-kbd-backlight up; notify-send -t 1000 $(asus-kbd-backlight show)"
 	XF86KbdBrightnessUp
 
 "xinput set-prop 12 281 0"
