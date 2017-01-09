@@ -1,4 +1,10 @@
-set -x PATH ~/bin/ ~/scripts/ $PATH
+if test -d ~/bin
+  set -x PATH ~/bin/ $PATH
+end
+if test -d ~/scripts
+  set -x PATH ~/scripts/ $PATH
+end
+
 set -x EDITOR vim
 
 set fish_greeting
@@ -23,4 +29,6 @@ set fish_color_status red
 set fish_color_user '-o' 'green'
 set fish_color_valid_path --underline
 
-source /usr/share/autojump/autojump.fish
+if test -f /usr/share/autojump/autojump.fish
+  source /usr/share/autojump/autojump.fish
+end
