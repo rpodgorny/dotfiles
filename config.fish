@@ -10,7 +10,8 @@ set -x EDITOR vim
 set fish_greeting
 
 set fish_color_autosuggestion '555' 'yellow'
-set fish_color_command '005fd7'  'purple'
+#set fish_color_command '005fd7' 'purple'
+set fish_color_command '60bfff' 'purple' '--bold'
 set fish_color_comment red
 set fish_color_cwd green
 set fish_color_cwd_root red
