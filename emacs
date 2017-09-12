@@ -62,6 +62,8 @@
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   ;(set-frame-font "mononoki-12")
+  (set-frame-font "-*-terminus-bold-*-*-*-18-*-*-*-*-*-iso10646-1")
+  ;(set-face-attribute 'default nil :family "Terminus" :weight 'bold :height 120)
 )
 
 (setq scroll-step 1)
@@ -87,17 +89,11 @@
            (line-beginning-position 2)))))
 
 (global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "C-c C-g") 'goto-line)
+(global-set-key (kbd "C-:") 'goto-line)
 (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 
-;(use-package evil)
-;(require 'evil)
-;(evil-mode t)
-
-;(use-package solarized-theme)
-;(load-theme 'solarized-dark t)
-(use-package spacemacs-theme)
-(load-theme 'spacemacs-dark t)
+(use-package afternoon-theme)
+(load-theme 'afternoon t)
 
 (semantic-mode 1)
 
@@ -105,70 +101,49 @@
   :init (setq-default save-place t))
 
 (use-package expand-region
-  :config (global-set-key (kbd "C-=") 'er/expand-region))
+  :bind (("C-=" . er/expand-region)))
 
-(use-package helm
-  :diminish helm-mode
-  :init (helm-mode 1)
-  :config
-    (require 'helm-config)
-    (setq helm-split-window-in-side-p t)
-    (setq helm-ff-file-name-history-use-recentf t)
-	(helm-push-mark-mode 1)
-	(define-key global-map [remap list-buffers] 'helm-buffers-list)
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
-    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-    (define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
-    (add-hook 'helm-grep-mode-hook (lambda () (grep-mode)))
-  :bind (
-    ("M-x" . helm-M-x)
-    ("C-x b" . helm-buffers-list)  ;; same as helm-mini?
-    ("C-x C-f" . helm-find-files)
-    ("C-h a" . helm-apropos)
-    ("C-." . helm-imenu-in-all-buffers)
-    ("M-y" . helm-show-kill-ring)
-    ("C-c h" . helm-command-prefix)
-    ("C-c <SPC>" . helm-all-mark-rings)))
+(use-package ivy
+  :ensure t
+  :diminish ivy-mode
+  :init (ivy-mode 1)
+  :config (setq ivy-use-virtual-buffers t
+                ivy-virtual-abbreviate 'full
+                ivy-height 20
+                ivy-initial-inputs-alist nil  ;; no regexp by default
+                ivy-re-builders-alist  ;; allow input not in order
+                '((t . ivy--regex-ignore-order))))
 
-(use-package helm-ag
-  :defer t
-;;  :init
-;;  (setq helm-ag-fuzzy-match t)
-  :config
-    (use-package ag)
-    (setq helm-ag-base-command "ag --smart-case --nocolor --nogroup")
-    (setq helm-ag-insert-at-point 'symbol)
-    (add-hook 'helm-ag-mode-hook (lambda () (grep-mode))))
-
-(global-set-key (kbd "M-g") (lambda ()
-                              (interactive)
-                              (helm-do-ag (projectile-project-root))))
-
-(global-set-key (kbd "M-G") (lambda ()
-                              (interactive)
-                              (helm-do-ag (helm-current-directory))))
-
-(use-package helm-projectile)
-(setq helm-projectile-fuzzy-match nil)
-(setq projectile-completion-system 'helm)
-(helm-projectile-on)
-
-(defun my-helm-projectile-buffers-list ()
+(defun my-counsel-ag ()
   (interactive)
-  (unless helm-source-buffers-list
-    (setq helm-source-buffers-list
-          (helm-make-source "Buffers" 'helm-source-buffers)))
-  (helm :sources '(helm-source-buffers-list
-                   helm-source-projectile-recentf-list
-                   helm-source-projectile-files-list
-                   helm-source-recentf
-                   helm-source-buffer-not-found)
-        :buffer "*helm buffers*"
-        :keymap helm-buffer-map
-        :truncate-lines helm-buffers-truncate-lines))
+  (counsel-ag (if (use-region-p)
+                (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'symbol t))))
 
-(global-set-key (kbd "C-c C-f") 'helm-projectile-find-file)
-(global-set-key (kbd "C-x b") 'my-helm-projectile-buffers-list)
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-h a" . counsel-apropos)
+         ("M-y" . counsel-yank-pop)
+         ("M-G" . my-counsel-ag)))
+
+;;(define-key counsel-find-file-map (kbd "C-l") 'counsel-up-directory)
+
+(use-package projectile
+  :diminish projectile-mode
+  :init (setq projectile-enable-caching t)
+        (projectile-global-mode)
+  :config (setq projectile-completion-system 'ivy))
+
+(use-package counsel-projectile
+  :init (counsel-projectile-on)
+  :config (setq counsel-projectile-ag-initial-input
+            '(projectile-symbol-or-selection-at-point))
+  :bind (("C-x C-p" . counsel-projectile-find-file)
+         ("M-g" . counsel-projectile-ag)))
+
+(use-package swiper
+  :bind (("C-s" . swiper)))
 
 (use-package guide-key
   :diminish guide-key-mode
@@ -177,44 +152,10 @@
     (setq guide-key/guide-key-sequence t)
     (setq guide-key/popup-window-position 'bottom))
 
-;(use-package smart-tabs-mode)
-;(smart-tabs-insinuate 'c 'javascript 'python)
-
 (use-package projectile
   :diminish projectile-mode
   :config
     (projectile-global-mode))
-
-;(use-package auto-complete)
-;(global-auto-complete-mode)
-;(setq ac-show-menu-immediately-on-auto-complete t)
-
-;(use-package company)
-;(global-company-mode)
-
-;(use-package flycheck)
-;(global-flycheck-mode)
-
-(use-package magit
-  :defer t)
-
-(use-package cider
-  :defer t)
-
-; TODO: i propably need to remap some key bindings and/or commands to make use of this
-(use-package helm-cider
-  :defer t)
-
-(use-package hy-mode
-  :defer t)
-
-(use-package elpy
-  :commands (eply-enable)
-  :config
-    (remove-hook 'elpy-modules 'elpy-module-yasnippet))
-
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt --pprint")
 
 (use-package whitespace
   :diminish whitespace-mode
@@ -223,23 +164,39 @@
     (setq whitespace-style '(face trailing newline))
     (add-hook 'prog-mode-hook 'whitespace-mode))
 
+(use-package magit
+  :defer t)
+
+(use-package cider
+  :defer t)
+
+(use-package hy-mode
+  :defer t)
+
+(use-package elpy)
+
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt --pprint")
+
+(add-hook 'python-mode-hook
+          '(lambda ()
+             (setq-local eldoc-mode nil)))
+
 (add-hook 'python-mode-hook
   (lambda ()
     (setq indent-tabs-mode t)
     (setq tab-width 4)
     (setq python-indent-offset 4)
-	(elpy-enable)))
+	(setq elpy-eldoc-show-current-function nil)
+	(elpy-enable)
+	(remove-hook 'elpy-modules 'elpy-module-yasnippet)))
 
 (add-hook 'pascal-mode-hook
   (lambda ()
     (setq indent-tabs-mode nil)
 	(setq tab-width 2)
-	(setq pascal-indent-level 2)))
-
-;(autoload 'jedi:setup "jedi" nil t)
-;(add-hook 'python-mode-hook 'jedi:setup)
-;(setq jedi:setup-keys t)
-;(setq jedi:complete-on-dot t)
+	(setq pascal-indent-level 2)
+	(setq pascal-auto-lineup nil)))
 
 (use-package rainbow-mode
   :defer t
@@ -302,8 +259,11 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-	("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
- '(indent-tabs-mode t))
+	("70403e220d6d7100bae7775b3334eddeb340ba9c37f4b39c189c2c29d458543b" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" "28ec8ccf6190f6a73812df9bc91df54ce1d6132f18b4c8fcc85d45298569eb53" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(indent-tabs-mode t)
+ '(package-selected-packages
+   (quote
+	(counsel swiper smartparens avy inf-clojure darkokai-theme monokai-theme highlight-symbol parinfer smooth-scrolling ivy ggtags cider package-utils ag use-package spacemacs-theme smart-mode-line rainbow-mode rainbow-delimiters pkgbuild-mode magit hy-mode guide-key expand-region elpy dumb-jump))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
