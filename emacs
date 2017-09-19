@@ -202,6 +202,17 @@
 	(setq pascal-indent-level 2)
 	(setq pascal-auto-lineup nil)))
 
+(add-hook 'opascal-mode-hook
+  (lambda ()
+    (setq indent-tabs-mode nil)
+	(setq tab-width 2)
+	(setq opascal-indent-level 2)
+	(setq opascal-auto-lineup nil)))
+
+(autoload 'opascal-mode "opascal")
+(add-to-list 'auto-mode-alist
+             '("\\.\\(pas\\|dpr\\|dpk\\)\\'" . opascal-mode))
+
 (use-package rainbow-mode
   :defer t
   :diminish rainbow-mode)
