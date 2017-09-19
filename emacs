@@ -142,8 +142,12 @@
   :bind (("C-x C-p" . counsel-projectile-find-file)
          ("M-g" . counsel-projectile-ag)))
 
+(defun my-swiper ()
+  (interactive)
+  (swiper (thing-at-point 'symbol t)))
+
 (use-package swiper
-  :bind (("C-s" . swiper)))
+  :bind (("C-s" . my-swiper)))
 
 (use-package guide-key
   :diminish guide-key-mode
