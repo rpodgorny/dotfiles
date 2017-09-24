@@ -63,6 +63,8 @@ def main():
 	do('../dotfiles/default.tigervnc', '~/.vnc/default.tigervnc')
 	do('../dotfiles/flake8', '~/.config/flake8')
 
+	do('../../dotfiles/vlcrc', '~/.config/vlc/vlcrc')
+
 	do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
 	do('../../../dotfiles/fish_prompt.fish', '~/.config/fish/functions/fish_prompt.fish')
 	do('../../../dotfiles/fish_right_prompt.fish', '~/.config/fish/functions/fish_right_prompt.fish')
