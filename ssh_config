@@ -5,3 +5,15 @@ VerifyHostKeyDNS yes
 
 Host aur.archlinux.org
 	IdentityFile ~/.ssh/id_rsa_aur
+
+Host bitbucket.org
+	IdentityFile ~/.ssh/id_rsa_bitbucket
+	User git
+
+Host atxpkg.asterix.cz
+	IdentityFile ~/.ssh/id_rsa_atxpkg
+	User atxpkg
+
+Host atxpkg-dev.asterix.cz
+	IdentityFile ~/.ssh/id_rsa_atxpkg
+	User atxpkg
