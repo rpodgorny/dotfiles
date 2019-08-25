@@ -158,6 +158,8 @@ assign [class="Chrome"] "9"
 assign [class="Chromium"] "9"
 assign [class="chromium"] "9"
 assign [class="Firefox"] "9"
+assign [class="firefox"] "9"
+assign [class="Mozilla Firefox"] "9"
 
 bindsym $mod+Shift+t exec i3-input -F 'rename workspace to "%s"'
 bindsym $mod+w exec i3-input -F 'workspace %s' -P 'go to workspace: '
