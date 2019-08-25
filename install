@@ -51,6 +51,7 @@ def main():
 	do('dotfiles/tmux.conf', '~/.tmux.conf')
 	do('dotfiles/vimrc', '~/.vimrc')
 	do('dotfiles/xbindkeysrc', '~/.xbindkeysrc')
+	do('dotfiles/xinitrc', '~/.xinitrc')
 	do('dotfiles/zshrc', '~/.zshrc')
 	do('dotfiles/zprofile', '~/.zprofile')
 
