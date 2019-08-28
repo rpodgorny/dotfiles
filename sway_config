@@ -183,13 +183,11 @@ bindsym XF86AudioRaiseVolume exec amixer sset Master 2%+
 bindsym XF86AudioMute exec amixer sset Master toggle
 
 set $lock swaylock -f -c 555555
-#exec xss-lock -- $lock
 exec swayidle -w \
   lock "$lock" \
   timeout 5 "light -s sysfs/leds/asus::kbd_backlight -r -S 0" resume "light -s sysfs/leds/asus::kbd_backlight -r -S 1" \
   timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
   timeout 601 "loginctl lock-session"
-#exec xbindkeys
 exec xterm
-
+exec light -s sysfs/leds/asus::kbd_backlight -r -S 1
 exec loginctl lock-session
