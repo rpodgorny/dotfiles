@@ -63,6 +63,7 @@ def main():
 	do('../dotfiles/gpg.conf', '~/.gnupg/gpg.conf')
 	do('../dotfiles/default.tigervnc', '~/.vnc/default.tigervnc')
 	do('../dotfiles/flake8', '~/.config/flake8')
+	do('../dotfiles/sway_config', '~/.sway/config')
 
 	do('../../dotfiles/vlcrc', '~/.config/vlc/vlcrc')
 
