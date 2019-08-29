@@ -175,8 +175,8 @@ input type:touchpad {
 	natural_scroll enabled
 }
 
-bindsym XF86MonBrightnessDown exec light -U 5
-bindsym XF86MonBrightnessUp exec light -A 5
+bindsym XF86MonBrightnessDown exec "light -U 5; VAL=$(light -G); notify-send ${VAL} -t 1000 -h int:value:${VAL} -h string:synchronous:brightness -i notification-display-brightness"
+bindsym XF86MonBrightnessUp exec "light -A 5; VAL=$(light -G); notify-send ${VAL} -t 1000 -h int:value:${VAL} -h string:synchronous:brightness -i notification-display-brightness"
 
 bindsym XF86AudioLowerVolume exec amixer sset Master 2%-
 bindsym XF86AudioRaiseVolume exec amixer sset Master 2%+
@@ -188,6 +188,7 @@ exec swayidle -w \
   timeout 5 "light -s sysfs/leds/asus::kbd_backlight -r -S 0" resume "light -s sysfs/leds/asus::kbd_backlight -r -S 1" \
   timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
   timeout 601 "loginctl lock-session"
+exec mako
 exec xterm
 exec light -s sysfs/leds/asus::kbd_backlight -r -S 1
 exec loginctl lock-session
