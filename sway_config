@@ -184,6 +184,7 @@ bindsym XF86AudioMute exec amixer sset Master toggle
 
 set $lock swaylock -f -c 555555
 exec swayidle -w \
+  before-sleep "loginctl lock-session" \
   lock "$lock" \
   timeout 5 "light -s sysfs/leds/asus::kbd_backlight -r -S 0" resume "light -s sysfs/leds/asus::kbd_backlight -r -S 1" \
   timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
