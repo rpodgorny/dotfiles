@@ -7,6 +7,11 @@ end
 
 set -x EDITOR vim
 
+alias r=retry
+alias ytdl=youtube-dl
+alias btdl='transmission-cli -w .'
+alias sshnv='ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
 set fish_greeting
 
 set fish_color_autosuggestion '555' 'yellow'
