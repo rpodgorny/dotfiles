@@ -175,6 +175,8 @@ input type:touchpad {
 	natural_scroll enabled
 }
 
+bindsym $mod+shift+f exec 'cpu_freq_crop toggle'
+
 bindsym XF86MonBrightnessDown exec "light -U 5; VAL=$(light -G); notify-send ${VAL} -t 1000 -h int:value:${VAL} -h string:synchronous:brightness -i notification-display-brightness"
 bindsym XF86MonBrightnessUp exec "light -A 5; VAL=$(light -G); notify-send ${VAL} -t 1000 -h int:value:${VAL} -h string:synchronous:brightness -i notification-display-brightness"
 

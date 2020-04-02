@@ -45,6 +45,7 @@ def main():
 	do('dotfiles/bashrc', '~/.bashrc')
 	do('dotfiles/emacs', '~/.emacs')
 	do('dotfiles/hgrc', '~/.hgrc')
+	do('dotfiles/i3status.conf', '~/.i3status.conf')
 	do('dotfiles/gitconfig', '~/.gitconfig')
 	do('dotfiles/makepkg.conf', '~/.makepkg.conf')
 	do('dotfiles/omnirun.conf', '~/.omnirun.conf')
