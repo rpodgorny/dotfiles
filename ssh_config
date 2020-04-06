@@ -3,22 +3,33 @@ ServerAliveCountMax 60
 
 VerifyHostKeyDNS yes
 
+# TODO: test and enable?
+#Host *
+#  KeepAlive yes
+#  Compression yes
+#  VisualHostKey yes
+#  ForwardAgent no
+
 Host aur.archlinux.org
-	IdentityFile ~/.ssh/id_rsa_aur
+  IdentityFile ~/.ssh/id_rsa_aur
+
+Host github.com
+  IdentityFile ~/.ssh/id_rsa_github
+  User git
 
 Host bitbucket.org
-	IdentityFile ~/.ssh/id_rsa_bitbucket
-	User git
+  IdentityFile ~/.ssh/id_rsa_bitbucket
+  User git
 
 Host git.asterix.cz
-	IdentityFile ~/.ssh/id_rsa_git_asterix_cz
-	User git
-	Port 2222
+  IdentityFile ~/.ssh/id_rsa_git_asterix_cz
+  User git
+  Port 2222
 
 Host atxpkg.asterix.cz
-	IdentityFile ~/.ssh/id_rsa_atxpkg
-	User atxpkg
+  IdentityFile ~/.ssh/id_rsa_atxpkg
+  User atxpkg
 
 Host atxpkg-dev.asterix.cz
-	IdentityFile ~/.ssh/id_rsa_atxpkg
-	User atxpkg
+  IdentityFile ~/.ssh/id_rsa_atxpkg
+  User atxpkg
