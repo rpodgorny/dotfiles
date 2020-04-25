@@ -58,7 +58,7 @@
 (menu-bar-mode -1)
 ;(global-linum-mode 1)
 
-(when window-system
+(when (display-graphic-p)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   ;(set-frame-font "mononoki-12")
@@ -103,51 +103,70 @@
 (use-package expand-region
   :bind (("C-=" . er/expand-region)))
 
-(use-package ivy
-  :ensure t
-  :diminish ivy-mode
-  :init (ivy-mode 1)
-  :config (setq ivy-use-virtual-buffers t
-                ivy-virtual-abbreviate 'full
-                ivy-height 20
-                ivy-initial-inputs-alist nil  ;; no regexp by default
-                ivy-re-builders-alist  ;; allow input not in order
-                '((t . ivy--regex-ignore-order))))
+(use-package dtrt-indent
+  :defer t)
 
-(defun my-counsel-ag ()
+(use-package helm
+  :diminish helm-mode
+  :init (helm-mode 1)
+  :config
+    (require 'helm-config)
+    (setq helm-split-window-in-side-p t)
+    (setq helm-ff-file-name-history-use-recentf t)
+	(define-key global-map [remap list-buffers] 'helm-buffers-list)
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+    (define-key helm-map (kbd "C-z") 'helm-select-action) ; list actions using C-z
+    (add-hook 'helm-grep-mode-hook (lambda () (grep-mode)))
+  :bind (
+    ("M-x" . helm-M-x)
+    ("C-x b" . helm-buffers-list)  ;; same as helm-mini?
+    ("C-x C-f" . helm-find-files)
+    ("C-h a" . helm-apropos)
+    ("C-." . helm-imenu-in-all-buffers)
+    ("M-y" . helm-show-kill-ring)
+    ("C-c h" . helm-command-prefix)
+    ("C-c <SPC>" . helm-all-mark-rings)))
+
+(use-package helm-ag
+  :defer t
+;;  :init
+;;  (setq helm-ag-fuzzy-match t)
+  :config
+    (use-package ag)
+    (setq helm-ag-base-command "ag --smart-case --nocolor --nogroup")
+    (setq helm-ag-insert-at-point 'symbol)
+    (add-hook 'helm-ag-mode-hook (lambda () (grep-mode))))
+
+(global-set-key (kbd "M-g") (lambda ()
+                              (interactive)
+                              (helm-do-ag (projectile-project-root))))
+
+(global-set-key (kbd "M-G") (lambda ()
+                              (interactive)
+                              (helm-do-ag (helm-current-directory))))
+
+(use-package helm-projectile)
+(setq helm-projectile-fuzzy-match nil)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+(defun my-helm-projectile-buffers-list ()
   (interactive)
-  (counsel-ag (if (use-region-p)
-                (buffer-substring-no-properties (region-beginning) (region-end))
-                (thing-at-point 'symbol t))))
+  (unless helm-source-buffers-list
+    (setq helm-source-buffers-list
+          (helm-make-source "Buffers" 'helm-source-buffers)))
+  (helm :sources '(helm-source-buffers-list
+                   helm-source-projectile-recentf-list
+                   helm-source-projectile-files-list
+                   ;helm-source-recentf
+                   helm-source-buffer-not-found)
+        :buffer "*helm buffers*"
+        :keymap helm-buffer-map
+        :truncate-lines helm-buffers-truncate-lines))
 
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-h a" . counsel-apropos)
-         ("M-y" . counsel-yank-pop)
-         ("M-G" . my-counsel-ag)))
-
-;;(define-key counsel-find-file-map (kbd "C-l") 'counsel-up-directory)
-
-(use-package projectile
-  :diminish projectile-mode
-  :init (setq projectile-enable-caching t)
-        (projectile-global-mode)
-  :config (setq projectile-completion-system 'ivy))
-
-(use-package counsel-projectile
-  :init (counsel-projectile-on)
-  :config (setq counsel-projectile-ag-initial-input
-            '(projectile-symbol-or-selection-at-point))
-  :bind (("C-x C-p" . counsel-projectile-find-file)
-         ("M-g" . counsel-projectile-ag)))
-
-(defun my-swiper ()
-  (interactive)
-  (swiper (thing-at-point 'symbol t)))
-
-(use-package swiper
-  :bind (("C-s" . my-swiper)))
+(global-set-key (kbd "C-c C-f") 'helm-projectile-find-file)
+(global-set-key (kbd "C-x b") 'my-helm-projectile-buffers-list)
 
 (use-package guide-key
   :diminish guide-key-mode
@@ -174,13 +193,38 @@
 (use-package cider
   :defer t)
 
-(use-package hy-mode
+; TODO: i propably need to remap some key bindings and/or commands to make use of this
+(use-package helm-cider
   :defer t)
 
-(use-package elpy)
+(use-package parinfer
+  :ensure t
+  :bind
+  (("C-," . parinfer-toggle-mode))
+  :init
+  (progn
+    (setq parinfer-extensions
+          '(defaults       ; should be included.
+            pretty-parens  ; different paren styles for different modes.
+            ;;evil           ; If you use Evil.
+            ;;lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
+            paredit        ; Introduce some paredit commands.
+            smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
+            smart-yank))   ; Yank behavior depend on mode.
+    (add-hook 'clojure-mode-hook #'parinfer-mode)
+    (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+    (add-hook 'common-lisp-mode-hook #'parinfer-mode)
+    (add-hook 'scheme-mode-hook #'parinfer-mode)
+    (add-hook 'lisp-mode-hook #'parinfer-mode)))
 
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt --pprint")
+(use-package elpy)
+  ;;:bind (
+    ;;("C-c C-c" . elpy-shell-send-top-statement)
+    ;;("C-c C-e" . elpy-shell-send-statement)))
+
+
+;(setq python-shell-interpreter "ipython"
+;      python-shell-interpreter-args "-i --simple-prompt --pprint")
 
 (add-hook 'python-mode-hook
           '(lambda ()
@@ -193,6 +237,8 @@
     (setq python-indent-offset 4)
 	(setq elpy-eldoc-show-current-function nil)
 	(elpy-enable)
+    ;;(local-set-key (kdb "C-c C-c") 'elpy-shell-send-top-statement)
+    ;;(local-set-key (kbd "C-c C-e") 'elpy-shell-send-statement)
 	(remove-hook 'elpy-modules 'elpy-module-yasnippet)))
 
 (add-hook 'pascal-mode-hook
@@ -208,6 +254,18 @@
 	(setq tab-width 2)
 	(setq opascal-indent-level 2)
 	(setq opascal-auto-lineup nil)))
+
+;;(add-hook 'clojure-mode-hook
+;;  (lambda ()
+;;    (setq parinfer-mode t)))
+
+;;(add-hook 'clojurescript-mode-hook
+;;  (lambda ()
+;;    (setq parinfer-mode t)))
+
+;;(add-hook 'lisp-mode-hook
+;;  (lambda ()
+;;	(setq parinfer-mode t)))
 
 (autoload 'opascal-mode "opascal")
 (add-to-list 'auto-mode-alist
@@ -236,12 +294,8 @@
 ; stolen from libor
 (defun dos2unix ()
   (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (while (search-forward (string ?\C-m) nil t)
-      (replace-match "" nil t))))
+  (set-buffer-file-coding-system 'unix))
 
-; yeah, i know, it sucks. but hey, it's my first function ever! ;-)
 (defun update-packages ()
   (interactive)
   (save-excursion
@@ -251,7 +305,6 @@
       (package-menu-execute t)
 	  (kill-buffer))))
 
-; well, this is the second one. i know, still sucky... ;-)
 (defun downcase-word-or-region ()
   (interactive)
   (if mark-active
@@ -263,6 +316,16 @@
   (if mark-active
     (upcase-region (region-beginning) (region-end))
     (call-interactively 'upcase-word)))
+
+; TODO: use dtrt-indent-mode - it seems to be smarter
+; stolen from https://www.emacswiki.org/emacs/NoTabs
+(defun infer-indentation-style ()
+  (interactive)
+  ;; if our source file uses tabs, we use tabs, if spaces spaces, and if neither, we use the current indent-tabs-mode
+  (let ((space-count (how-many "^  " (point-min) (point-max)))
+        (tab-count (how-many "^\t" (point-min) (point-max))))
+    (if (> space-count tab-count) (setq indent-tabs-mode nil))
+    (if (> tab-count space-count) (setq indent-tabs-mode t))))
 
 (global-set-key (kbd "M-l") 'downcase-word-or-region)
 (global-set-key (kbd "M-u") 'upcase-word-or-region)
@@ -278,7 +341,7 @@
  '(indent-tabs-mode t)
  '(package-selected-packages
    (quote
-	(counsel swiper smartparens avy inf-clojure darkokai-theme monokai-theme highlight-symbol parinfer smooth-scrolling ivy ggtags cider package-utils ag use-package spacemacs-theme smart-mode-line rainbow-mode rainbow-delimiters pkgbuild-mode magit hy-mode guide-key expand-region elpy dumb-jump))))
+	(inf-clojure dtrt-indent rg pipenv helpful smartparens avy darkokai-theme monokai-theme highlight-symbol parinfer smooth-scrolling ggtags cider package-utils ag use-package spacemacs-theme smart-mode-line rainbow-mode rainbow-delimiters pkgbuild-mode magit guide-key expand-region elpy dumb-jump))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
