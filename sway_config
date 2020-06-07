@@ -177,8 +177,8 @@ input type:touchpad {
 
 bindsym $mod+shift+f exec 'cpu_freq_crop toggle'
 
-bindsym XF86MonBrightnessDown exec "light -U 5; VAL=$(light -G); notify-send ${VAL} -t 1000 -h int:value:${VAL} -h string:synchronous:brightness -i notification-display-brightness"
-bindsym XF86MonBrightnessUp exec "light -A 5; VAL=$(light -G); notify-send ${VAL} -t 1000 -h int:value:${VAL} -h string:synchronous:brightness -i notification-display-brightness"
+bindsym XF86MonBrightnessDown exec "bright down"
+bindsym XF86MonBrightnessUp exec "bright up"
 
 bindsym XF86AudioLowerVolume exec amixer sset Master 2%-
 bindsym XF86AudioRaiseVolume exec amixer sset Master 2%+
