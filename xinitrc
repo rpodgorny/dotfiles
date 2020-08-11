@@ -35,5 +35,5 @@ dex -av -e i3
 
 #`sleep 10; xterm` &
 
-#exec i3
-exec sway
+exec i3
+#exec sway

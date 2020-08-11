@@ -1,5 +1,5 @@
 [flake8]
-ignore = W191,E501,E502,E122,E128,E265
+ignore = W191,E501,E502,E122,E128,E265,E117
 ;max-line-length = 160
 ;exclude = tests/*
 ;max-complexity = 10
