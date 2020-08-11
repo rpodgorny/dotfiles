@@ -1,5 +1,10 @@
 set nocompatible
 set encoding=utf-8
+syntax enable
+set background=dark
+
+set path+=**
+set wildmenu
 
 " this has to be before 'ruler' (and maybe others) - why???
 " actually don't set this as it conflicts with youcompleteme tab completion
@@ -33,9 +38,6 @@ set shiftwidth=4
 " http://vim.wikia.com/wiki/Highlight_unwanted_spaces
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
-
-syntax on
-set background=dark
 
 " inoremap <Up> <NOP>
 " inoremap <Down> <NOP>
