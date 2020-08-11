@@ -26,6 +26,11 @@ Host git.asterix.cz
   User git
   Port 2222
 
+Host archlinux.podgorny.cz
+  IdentityFile ~/.ssh/id_rsa_archlinux_podgorny_cz
+  User arch
+  Port 2223
+
 Host atxpkg.asterix.cz
   IdentityFile ~/.ssh/id_rsa_atxpkg
   User atxpkg
