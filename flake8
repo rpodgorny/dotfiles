@@ -1,5 +1,6 @@
 [flake8]
-ignore = W191,E501,E502,E122,E128,E265,E117
+; remove E101 after migrating to spaces
+ignore = W191,E501,E502,E122,E128,E265,E117,E101,E126
 ;max-line-length = 160
 ;exclude = tests/*
 ;max-complexity = 10
