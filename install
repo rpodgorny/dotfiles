@@ -41,6 +41,7 @@ def main():
 	logging.basicConfig(level='INFO')
 
 	do('dotfiles/Xresources', '~/.Xresources')
+	do('dotfiles/agignore', '~/.agignore')
 	do('dotfiles/bash_profile', '~/.bash_profile')
 	do('dotfiles/bashrc', '~/.bashrc')
 	do('dotfiles/emacs', '~/.emacs')
