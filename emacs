@@ -134,7 +134,8 @@
 ;;  (setq helm-ag-fuzzy-match t)
   :config
     (use-package ag)
-    (setq helm-ag-base-command "ag --smart-case --nocolor --nogroup")
+    ;(setq helm-ag-base-command "ag --smart-case --nocolor --nogroup")
+    (setq helm-ag-base-command "ag --smart-case --nocolor --nogroup --width=100")  ; added the --width param so minified js does not fuck the output
     (setq helm-ag-insert-at-point 'symbol)
     (add-hook 'helm-ag-mode-hook (lambda () (grep-mode))))
 
@@ -190,13 +191,6 @@
 (use-package magit
   :defer t)
 
-(use-package cider
-  :defer t)
-
-; TODO: i propably need to remap some key bindings and/or commands to make use of this
-(use-package helm-cider
-  :defer t)
-
 (use-package parinfer
   :ensure t
   :bind
@@ -216,6 +210,11 @@
     (add-hook 'common-lisp-mode-hook #'parinfer-mode)
     (add-hook 'scheme-mode-hook #'parinfer-mode)
     (add-hook 'lisp-mode-hook #'parinfer-mode)))
+
+(use-package inf-clojure
+  :ensure t)
+
+(add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
 
 (use-package elpy)
   ;;:bind (
@@ -341,7 +340,7 @@
  '(indent-tabs-mode t)
  '(package-selected-packages
    (quote
-	(inf-clojure dtrt-indent rg pipenv helpful smartparens avy darkokai-theme monokai-theme highlight-symbol parinfer smooth-scrolling ggtags cider package-utils ag use-package spacemacs-theme smart-mode-line rainbow-mode rainbow-delimiters pkgbuild-mode magit guide-key expand-region elpy dumb-jump))))
+	(inf-clojure dtrt-indent rg pipenv helpful smartparens avy darkokai-theme monokai-theme highlight-symbol parinfer smooth-scrolling ggtags package-utils ag use-package spacemacs-theme smart-mode-line rainbow-mode rainbow-delimiters pkgbuild-mode magit guide-key expand-region elpy dumb-jump))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
