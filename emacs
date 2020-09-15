@@ -221,7 +221,6 @@
     ;;("C-c C-c" . elpy-shell-send-top-statement)
     ;;("C-c C-e" . elpy-shell-send-statement)))
 
-
 ;(setq python-shell-interpreter "ipython"
 ;      python-shell-interpreter-args "-i --simple-prompt --pprint")
 

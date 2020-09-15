@@ -1,6 +1,6 @@
 TigerVNC Configuration file Version 1.0
 
-ServerName=manasek.asterix.cz
+ServerName=mj219.asterix.cz
 X509CA=
 X509CRL=
 SecurityTypes=X509Plain,TLSPlain,X509Vnc,TLSVnc,X509None,TLSNone,VncAuth,None
@@ -25,3 +25,4 @@ SendClipboard=1
 SendPrimary=1
 MenuKey=F8
 FullscreenSystemKeys=0
+AlertOnFatalError=1
