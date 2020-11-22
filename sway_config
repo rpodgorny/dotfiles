@@ -174,7 +174,8 @@ bindsym $mod+Shift+w exec i3-input -F 'move container to workspace %s' -P 'move 
 # see /usr/share/X11/xkb/rules/base.lst for all options
 input type:keyboard {
 	xkb_layout us,cz
-	xkb_options grp:ctrls_toggle,ctrl:nocaps
+	#xkb_options grp:ctrls_toggle,ctrl:nocaps
+	xkb_options grp:win_space_toggle,ctrl:nocaps
 }
 
 input type:touchpad {
