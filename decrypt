@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e -x
+encfs ~/dotfiles/encrypted ~/dotfiles/decrypted
+chmod go-rwx ~/dotfiles/decrypted/id_rsa*
+chmod go+r ~/dotfiles/decrypted/id_rsa*.pub
