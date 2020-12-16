@@ -11,30 +11,30 @@ VerifyHostKeyDNS yes
 #  ForwardAgent no
 
 Host aur.archlinux.org
-  IdentityFile ~/.ssh/id_rsa_aur
+  IdentityFile ~/dotfiles/decrypted/id_rsa_aur
 
 Host github.com
-  IdentityFile ~/.ssh/id_rsa_github
+  IdentityFile ~/dotfiles/decrypted/id_rsa_github
   User git
 
 Host bitbucket.org
-  IdentityFile ~/.ssh/id_rsa_bitbucket
+  IdentityFile ~/dotfiles/decrypted/id_rsa_bitbucket
   User git
 
 Host git.asterix.cz
-  IdentityFile ~/.ssh/id_rsa_git_asterix_cz
+  IdentityFile ~/dotfiles/decryoted/id_rsa_git_asterix_cz
   User git
   Port 2222
 
 Host archlinux.podgorny.cz
-  IdentityFile ~/.ssh/id_rsa_archlinux_podgorny_cz
+  IdentityFile ~/dotfiles/decrypted/id_rsa_archlinux_podgorny_cz
   User arch
   Port 2223
 
 Host atxpkg.asterix.cz
-  IdentityFile ~/.ssh/id_rsa_atxpkg
+  IdentityFile ~/dotfiles/decrypted/id_rsa_atxpkg
   User atxpkg
 
 Host atxpkg-dev.asterix.cz
-  IdentityFile ~/.ssh/id_rsa_atxpkg
+  IdentityFile ~/dotfiles/decrypted/id_rsa_atxpkg
   User atxpkg
