@@ -22,7 +22,7 @@ Host bitbucket.org
   User git
 
 Host git.asterix.cz
-  IdentityFile ~/dotfiles/decryoted/id_rsa_git_asterix_cz
+  IdentityFile ~/dotfiles/decrypted/id_rsa_git_asterix_cz
   User git
   Port 2222
 
