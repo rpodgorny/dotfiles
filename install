@@ -64,13 +64,14 @@ def main():
 	do('../dotfiles/flake8', '~/.config/flake8')
 	do('../dotfiles/sway_config', '~/.sway/config')
 
+	do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
+	do('../../dotfiles/kitty.conf', '~/.config/kitty/kitty.conf')
+	do('../../dotfiles/mc_ini', '~/.config/mc/ini')
 	do('../../dotfiles/vlcrc', '~/.config/vlc/vlcrc')
 
-	do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
 	do('../../../dotfiles/fish_prompt.fish', '~/.config/fish/functions/fish_prompt.fish')
 	do('../../../dotfiles/fish_right_prompt.fish', '~/.config/fish/functions/fish_right_prompt.fish')
 	do('../../../dotfiles/__fish_print_hostnames.fish', '~/.config/fish/functions/__fish_print_hostnames.fish')
-	do('../../dotfiles/kitty.conf', '~/.config/kitty/kitty.conf')
 
 
 if __name__ == '__main__':
