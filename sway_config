@@ -1,11 +1,3 @@
-# Should you change your keyboard layout somewhen, delete
-# this file and re-run i3-config-wizard(1).
-#
-
-# i3 config file (v4)
-#
-# Please see http://i3wm.org/docs/userguide.html for a complete reference!
-
 set $mod Mod4
 ###set $font -*-terminus-medium-r-normal-*-14-*-*-*-*-*-*-*
 set $font pango:Terminus 14
@@ -80,6 +72,7 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 # switch to workspace
+#bindsym $mod+xxxtilde workspace number 0
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
@@ -126,33 +119,33 @@ bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-	# These bindings trigger as soon as you enter the resize mode
+  # These bindings trigger as soon as you enter the resize mode
 
-	# Pressing left will shrink the window’s width.
-	# Pressing right will grow the window’s width.
-	# Pressing up will shrink the window’s height.
-	# Pressing down will grow the window’s height.
-	bindsym h resize shrink width 10 px or 10 ppt
-	bindsym j resize grow height 10 px or 10 ppt
-	bindsym k resize shrink height 10 px or 10 ppt
-	bindsym l resize grow width 10 px or 10 ppt
+  # Pressing left will shrink the window’s width.
+  # Pressing right will grow the window’s width.
+  # Pressing up will shrink the window’s height.
+  # Pressing down will grow the window’s height.
+  bindsym h resize shrink width 10 px or 10 ppt
+  bindsym j resize grow height 10 px or 10 ppt
+  bindsym k resize shrink height 10 px or 10 ppt
+  bindsym l resize grow width 10 px or 10 ppt
 
-	# same bindings, but for the arrow keys
-	bindsym Left resize shrink width 10 px or 10 ppt
-	bindsym Down resize grow height 10 px or 10 ppt
-	bindsym Up resize shrink height 10 px or 10 ppt
-	bindsym Right resize grow width 10 px or 10 ppt
+  # same bindings, but for the arrow keys
+  bindsym Left resize shrink width 10 px or 10 ppt
+  bindsym Down resize grow height 10 px or 10 ppt
+  bindsym Up resize shrink height 10 px or 10 ppt
+  bindsym Right resize grow width 10 px or 10 ppt
 
-	# back to normal: Enter or Escape
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
 }
 
 bindsym $mod+r mode "resize"
 
 bar {
-	status_command i3status
-	font $font
+  status_command i3status
+  font $font
 }
 
 default_border pixel 1
@@ -173,23 +166,25 @@ bindsym $mod+Shift+w exec i3-input -F 'move container to workspace %s' -P 'move 
 
 # see /usr/share/X11/xkb/rules/base.lst for all options
 input type:keyboard {
-	xkb_layout us,cz
-	#xkb_options grp:ctrls_toggle,ctrl:nocaps
-	xkb_options grp:win_space_toggle,ctrl:nocaps
+  xkb_layout us,cz
+  #xkb_options grp:ctrls_toggle,ctrl:nocaps
+  xkb_options grp:win_space_toggle,ctrl:nocaps
 }
 
 input type:touchpad {
-	natural_scroll enabled
+  tap enabled
+  natural_scroll enabled
 }
 
-bindsym $mod+shift+f exec 'cpu_freq_crop toggle'
+bindsym $mod+shift+f exec "cpu_freq_crop toggle"
+bindsym --locked $mod+shift+escape exec "sudo systemctl suspend"
 
-bindsym XF86MonBrightnessDown exec "bright down"
-bindsym XF86MonBrightnessUp exec "bright up"
+bindsym --locked XF86MonBrightnessDown exec "bright down"
+bindsym --locked XF86MonBrightnessUp exec "bright up"
 
-bindsym XF86AudioLowerVolume exec amixer sset Master 2%-
-bindsym XF86AudioRaiseVolume exec amixer sset Master 2%+
-bindsym XF86AudioMute exec amixer sset Master toggle
+bindsym --locked XF86AudioLowerVolume exec amixer sset Master 2%-
+bindsym --locked XF86AudioRaiseVolume exec amixer sset Master 2%+
+bindsym --locked XF86AudioMute exec amixer sset Master toggle
 
 set $lock swaylock -f -c 555555
 exec swayidle -w \
