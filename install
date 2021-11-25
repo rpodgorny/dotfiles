@@ -65,6 +65,7 @@ def main():
 	do('../dotfiles/sway_config', '~/.sway/config')
 
 	do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
+	do('../../dotfiles/foot.ini', '~/.config/foot/foot.ini')
 	do('../../dotfiles/kitty.conf', '~/.config/kitty/kitty.conf')
 	do('../../dotfiles/mc_ini', '~/.config/mc/ini')
 	do('../../dotfiles/vlcrc', '~/.config/vlc/vlcrc')
