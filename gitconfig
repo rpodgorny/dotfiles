@@ -19,3 +19,5 @@
 	colorMoved = zebra
 [pull]
 	rebase = false
+[color]
+	ui = auto
