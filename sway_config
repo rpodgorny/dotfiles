@@ -153,12 +153,14 @@ for_window [class="^.*"] border pixel 1
 hide_edge_borders smart
 
 assign [class="Thunderbird"] "8"
+assign [app_id="thunderbird"] "8"
 assign [class="Chrome"] "9"
 assign [class="Chromium"] "9"
 assign [class="chromium"] "9"
 assign [class="Firefox"] "9"
 assign [class="firefox"] "9"
 assign [class="Mozilla Firefox"] "9"
+assign [app_id="firefox"] "9"
 
 bindsym $mod+Shift+t exec i3-input -F 'rename workspace to "%s"'
 bindsym $mod+w exec i3-input -F 'workspace %s' -P 'go to workspace: '
