@@ -1,22 +1,26 @@
-# Selenized white
+# Selenized white (modifed heavily by Radek Podgorny)
 
 [cursor]
 color=ffffff 009a8a
 
 [colors]
 background= ffffff
-foreground= 111111
+foreground= 000000
 
 regular0=   ebebeb
-regular1=   d6000c
+#regular1=   d6000c
+regular1=   e6808c
 regular2=   1d9700
-regular3=   c49700
+#regular3=   c49700
+regular3=   886600
 regular4=   0064e4
 regular5=   dd0f9d
 regular6=   00ad9c
-regular7=   878787
+#regular7=   878787
+regular7=   222222
 
-bright0=    cdcdcd
+#bright0=    cdcdcd
+bright0=    999999
 bright1=    bf0000
 bright2=    008400
 bright3=    af8500
