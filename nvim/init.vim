@@ -51,6 +51,9 @@ set shiftwidth=4
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 
+let mapleader = " "
+let maplocalleader = " "
+
 " do not skip wrapped lines (does not work in insert mode)
 " inoremap <Up> gk
 " inoremap <Down> gj
@@ -65,6 +68,8 @@ Plug 'neovim/nvim-lspconfig'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+Plug 'simrat39/rust-tools.nvim'
+
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.0'}
 
@@ -78,10 +83,14 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'L3MON4D3/LuaSnip'
 
+" Plug 'Olical/conjure'
+
 " Plug 'jiangmiao/auto-pairs'
 
 Plug 'kosayoda/nvim-lightbulb'
 Plug 'antoinemadec/FixCursorHold.nvim'
+
+Plug 'michaelb/sniprun'
 
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
@@ -107,18 +116,21 @@ Plug 'jschmold/sweet-dark.vim'
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'Th3Whit3Wolf/onebuddy'
 
+Plug 'ThePrimeagen/vim-be-good'
+
 call plug#end()
 
 lua <<EOF
 
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+--local opts = { noremap=true, silent=true }
+--vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+--vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+--vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+--vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- #capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
@@ -161,10 +173,11 @@ require'lspconfig'.pylsp.setup{
     }
   }
 }
-require'lspconfig'.rust_analyzer.setup{
-  capabilities = capabilities,
-  on_attach = on_attach,
-}
+-- should by already done by rust-tools
+--require'lspconfig'.rust_analyzer.setup{
+--  capabilities = capabilities,
+--  on_attach = on_attach,
+--}
 require'lspconfig'.tsserver.setup{
   capabilities = capabilities,
   on_attach = on_attach,
@@ -173,6 +186,11 @@ require'lspconfig'.gopls.setup{
   capabilities = capabilities,
   on_attach = on_attach,
 }
+require'lspconfig'.openscad_ls.setup{
+  capabilities = capabilities,
+  on_attach = on_attach,
+}
+vim.cmd [[ autocmd BufRead,BufNewFile *.scad set filetype=openscad ]]
 
 local luasnip = require 'luasnip'
 local cmp = require 'cmp'
@@ -221,12 +239,31 @@ cmp.setup {
 require('nvim-lightbulb').setup({autocmd = {enabled = true}})
 
 require'nvim-treesitter.configs'.setup {
+  --ensure_installed = { "bash", "c", "clojure", "cpp", "dockerfile", "go", "hjson", "html", "javascript", "json", "lua", "make", "markdown", "pascal", "python", "rust", "vim", "yaml" },
+  ensure_installed = "all",
   highlight = {
     enable = true
   }
 }
 
+require('rust-tools').setup()
+
 require'telescope'.setup {
+  defaults = {
+    path_display = { "smart" },
+    --sorting_strategy = "ascending",
+    scroll_strategy = "limit",
+    layout_config = {
+      --prompt_position = "top",
+      width = 0.95,
+      preview_width = 0.6,
+    },
+    mappings = {
+      i = {
+        ["<C-h>"] = "which_key",
+      },
+    },
+  },
   extensions = {
     ["ui-select"] = {
       require("telescope.themes").get_dropdown{}
@@ -247,10 +284,10 @@ require("bufferline").setup {
 
 require'hop'.setup()
 
-vim.api.nvim_set_keymap('', 'f', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>", {})
-vim.api.nvim_set_keymap('', 'F', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>", {})
-vim.api.nvim_set_keymap('', 't', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })<cr>", {})
-vim.api.nvim_set_keymap('', 'T', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })<cr>", {})
+--vim.api.nvim_set_keymap('', 'f', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>", {})
+--vim.api.nvim_set_keymap('', 'F', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>", {})
+--vim.api.nvim_set_keymap('', 't', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })<cr>", {})
+--vim.api.nvim_set_keymap('', 'T', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })<cr>", {})
 
 require('leap').set_default_keymaps()
 
@@ -262,10 +299,15 @@ require('leap').set_default_keymaps()
 
 EOF
 
+let g:conjure#client_on_load = v:false
+let g:conjure#client#python#stdio#command = "pipenv run python3 -iq"
+
 colorscheme vscode
 
-let mapleader = " "
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
 
+nnoremap <leader><space> <cmd>Telescope commands<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fG <cmd>Telescope grep_string<cr>
@@ -273,8 +315,11 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>gr <cmd>Telescope lsp_references<cr>
 
+nnoremap K <cmd>lua vim.lsp.buf.hover{}<cr>
+nnoremap <C-k> <cmd>lua vim.lsp.buf.signature_help{}<cr>
+
 nnoremap <leader>h <cmd>HopWord<cr>
-nnoremap <leader>c <cmd>BufferClose<cr>
+nnoremap <leader>cc <cmd>BufferClose<cr>
 
 " open file at last position (doesn't seem to be working)
 " autocmd BufRead * autocmd FileType ++once if &ft !~# 'commit\|rebase' && line("'\"") > 1 && line("'\"") <= line("$") | exe 'normal! g`"' | endif
