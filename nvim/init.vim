@@ -159,20 +159,25 @@ end
 require'lspconfig'.pylsp.setup{
   capabilities = capabilities,
   on_attach = on_attach,
-  settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = {'W191', 'E122', 'E265'},
-          maxLineLength = 9999
-        },
-        mccabe = {
-          enabled = false
-        }
-      }
-    }
-  }
+-- i'm now using ruff so the following is not active
+--  settings = {
+--    pylsp = {
+--      plugins = {
+--        pycodestyle = {
+--          ignore = {'W191', 'E122', 'E265'},
+--          maxLineLength = 9999
+--        },
+--        mccabe = {
+--          enabled = false
+--        }
+--      }
+--    }
+--  }
 }
+--require'lspconfig'.pyright.setup{
+--  capabilities = capabilities,
+--  on_attach = on_attach,
+--}
 -- should by already done by rust-tools
 --require'lspconfig'.rust_analyzer.setup{
 --  capabilities = capabilities,
@@ -308,6 +313,7 @@ nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
 
 nnoremap <leader><space> <cmd>Telescope commands<cr>
+nnoremap <leader>d <cmd>Telescope diagnostics<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fG <cmd>Telescope grep_string<cr>
