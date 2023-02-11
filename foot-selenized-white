@@ -7,7 +7,8 @@ color=ffffff 009a8a
 background= ffffff
 foreground= 000000
 
-regular0=   ebebeb
+#regular0=   ebebeb
+regular0=   bbbbbb
 #regular1=   d6000c
 regular1=   e6808c
 regular2=   1d9700
