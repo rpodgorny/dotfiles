@@ -4,6 +4,9 @@ end
 if test -d ~/scripts
   set -x PATH ~/scripts/ $PATH
 end
+if test -d ~/.nix-profile/bin
+  set -x PATH ~/.nix-profile/bin/ $PATH
+end
 
 set -x EDITOR vim
 
