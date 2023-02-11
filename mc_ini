@@ -91,7 +91,7 @@ permission_mode=0
 quick_search_case_sensitive=2
 ignore_ftp_chattr_errors=true
 keymap=mc.keymap
-skin=yadt256
+skin=yadt256-defbg
 
 editor_group_undo=false
 
@@ -130,6 +130,8 @@ editor_stop_format_chars=-+*\\,.;:&>
 editor_state_full_filename=false
 
 safe_overwrite=false
+
+shadows=true
 
 [Layout]
 message_visible=false
@@ -178,6 +180,8 @@ autodetect_codeset=
 clipboard_store=
 clipboard_paste=
 
+spell_language=en
+
 [Colors]
 base_color=
 linux=
@@ -188,6 +192,8 @@ xterm=
 screen-256color=
 
 xterm-256color=
+
+foot=
 
 [Panels]
 kilobyte_si=false
