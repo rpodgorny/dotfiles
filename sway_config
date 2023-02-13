@@ -162,7 +162,7 @@ assign [class="firefox"] "9"
 assign [class="Mozilla Firefox"] "9"
 assign [app_id="firefox"] "9"
 
-bindsym $mod+Shift+t exec i3-input -F 'rename workspace to "%s"'
+#bindsym $mod+Shift+t exec i3-input -F 'rename workspace to "%s"'
 bindsym $mod+w exec i3-input -F 'workspace %s' -P 'go to workspace: '
 bindsym $mod+Shift+w exec i3-input -F 'move container to workspace %s' -P 'move to workspace: '
 
@@ -178,6 +178,8 @@ input type:touchpad {
   natural_scroll enabled
 }
 
+
+bindsym $mod+shift+t exec "rptheme"
 bindsym $mod+shift+f exec "cpu_freq_crop toggle"
 bindsym --locked $mod+shift+escape exec "sudo systemctl suspend"
 
@@ -188,14 +190,15 @@ bindsym --locked XF86AudioLowerVolume exec amixer sset Master 2%-
 bindsym --locked XF86AudioRaiseVolume exec amixer sset Master 2%+
 bindsym --locked XF86AudioMute exec amixer sset Master toggle
 
+bindsym --locked Control+Escape exec "light -s sysfs/leds/asus::kbd_backlight -r -S 1; sleep 5; light -s sysfs/leds/asus::kbd_backlight -r -S 0"
 set $lock swaylock -f -c 555555
 exec swayidle -w \
   lock "$lock" \
   before-sleep "loginctl lock-session" \
-  timeout 5 "light -s sysfs/leds/asus::kbd_backlight -r -S 0" resume "light -s sysfs/leds/asus::kbd_backlight -r -S 1" \
   timeout 600 "swaymsg 'output * dpms off'" resume "swaymsg 'output * dpms on'" \
   timeout 601 "loginctl lock-session"
+#  timeout 5 "light -s sysfs/leds/asus::kbd_backlight -r -S 0" resume "light -s sysfs/leds/asus::kbd_backlight -r -S 1" \
 exec mako
 exec xterm
-exec light -s sysfs/leds/asus::kbd_backlight -r -S 1
+#exec light -s sysfs/leds/asus::kbd_backlight -r -S 1
 exec loginctl lock-session
