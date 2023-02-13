@@ -146,6 +146,16 @@ bindsym $mod+r mode "resize"
 bar {
   status_command i3status
   font $font
+
+  #colors {
+  #  background #eeeeee
+  #  statusline #000000
+  #  separator #000000
+  #  focused_workspace #555555 #ffffff #000000
+  #  active_workspace #555555 #eeeeee #000000
+  #  inactive_workspace #555555 #cccccc #000000
+  #  urgent_workspace #555555 #ffcccc #000000
+  #}
 }
 
 default_border pixel 1
@@ -180,6 +190,7 @@ input type:touchpad {
 
 
 bindsym $mod+shift+t exec "rptheme"
+
 bindsym $mod+shift+f exec "cpu_freq_crop toggle"
 bindsym --locked $mod+shift+escape exec "sudo systemctl suspend"
 
@@ -191,6 +202,7 @@ bindsym --locked XF86AudioRaiseVolume exec amixer sset Master 2%+
 bindsym --locked XF86AudioMute exec amixer sset Master toggle
 
 bindsym --locked Control+Escape exec "light -s sysfs/leds/asus::kbd_backlight -r -S 1; sleep 5; light -s sysfs/leds/asus::kbd_backlight -r -S 0"
+
 set $lock swaylock -f -c 555555
 exec swayidle -w \
   lock "$lock" \
@@ -199,6 +211,6 @@ exec swayidle -w \
   timeout 601 "loginctl lock-session"
 #  timeout 5 "light -s sysfs/leds/asus::kbd_backlight -r -S 0" resume "light -s sysfs/leds/asus::kbd_backlight -r -S 1" \
 exec mako
-exec xterm
+exec term
 #exec light -s sysfs/leds/asus::kbd_backlight -r -S 1
 exec loginctl lock-session
