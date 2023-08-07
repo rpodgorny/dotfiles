@@ -316,14 +316,18 @@ colorscheme vscode
 nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
 
-nnoremap <leader><space> <cmd>Telescope commands<cr>
+"nnoremap <leader>? <cmd>Telescope commands<cr>
+nnoremap <leader>C <cmd>Telescope commands<cr>
 nnoremap <leader>d <cmd>Telescope diagnostics<cr>
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fG <cmd>Telescope grep_string<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-nnoremap <leader>gr <cmd>Telescope lsp_references<cr>
+nnoremap <leader>f <cmd>Telescope find_files<cr>
+nnoremap <leader>/ <cmd>Telescope live_grep<cr>
+"nnoremap <leader>g <cmd>Telescope grep_string<cr>
+nnoremap <leader>? <cmd>Telescope grep_string<cr>
+nnoremap <leader>b <cmd>Telescope buffers<cr>
+nnoremap <leader>h <cmd>Telescope help_tags<cr>
+nnoremap <leader>s <cmd>Telescope lsp_document_symbols<cr>
+nnoremap <leader>S <cmd>Telescope lsp_workspace_symbols<cr>
+nnoremap <leader>R <cmd>Telescope lsp_references<cr>
 
 nnoremap K <cmd>lua vim.lsp.buf.hover{}<cr>
 nnoremap <C-k> <cmd>lua vim.lsp.buf.signature_help{}<cr>
