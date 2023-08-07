@@ -183,6 +183,10 @@ require'lspconfig'.pylsp.setup{
 --  capabilities = capabilities,
 --  on_attach = on_attach,
 --}
+require'lspconfig'.cssls.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+}
 require'lspconfig'.tsserver.setup{
   capabilities = capabilities,
   on_attach = on_attach,
