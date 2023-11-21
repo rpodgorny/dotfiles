@@ -21,3 +21,5 @@
 	rebase = false
 [color]
 	ui = auto
+[safe]
+	directory = *
