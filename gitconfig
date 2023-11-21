@@ -23,3 +23,5 @@
 	ui = auto
 [safe]
 	directory = *
+[fetch]
+	parallel = 0
