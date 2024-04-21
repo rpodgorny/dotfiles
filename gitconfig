@@ -6,6 +6,7 @@
 [core]
 	autocrlf = input
 
+	excludesfile = /home/radek/.gitignore
 [alias]
 	# http://stackoverflow.com/questions/1838873/visualizing-branch-topology-in-git
 	lg = !"git lg1"

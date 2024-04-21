@@ -48,6 +48,7 @@ def main():
 	do('dotfiles/hgrc', '~/.hgrc')
 	do('dotfiles/i3status.conf', '~/.i3status.conf')
 	do('dotfiles/gitconfig', '~/.gitconfig')
+	do('dotfiles/gitignore', '~/.gitignore')
 	do('dotfiles/makepkg.conf', '~/.makepkg.conf')
 	do('dotfiles/omnirun.conf', '~/.omnirun.conf')
 	do('dotfiles/tmux.conf', '~/.tmux.conf')
