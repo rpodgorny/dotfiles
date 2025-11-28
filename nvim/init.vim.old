@@ -1,0 +1,326 @@
+set nocompatible
+
+set termguicolors
+set background=dark
+
+set encoding=utf-8
+syntax enable
+
+" this fucks up 'select to copy' functionality in terminal
+" set mouse+=a
+
+" disable mouse shit to enable middle-button paste
+set mouse=
+
+set path+=**
+set wildmenu
+
+" this has to be before 'ruler' (and maybe others) - why???
+" actually don't set this as it conflicts with youcompleteme tab completion
+" set paste
+
+set ruler
+set laststatus=2
+set showcmd
+set showmode
+" set number
+" set relativenumber
+" set nowrap
+
+" better search
+set incsearch
+set ignorecase
+set smartcase
+set hlsearch
+
+set scrolloff=5
+
+set breakindent
+
+set listchars=tab:>-,trail:-,nbsp:%,eol:$
+
+filetype plugin on
+filetype plugin indent off
+set autoindent
+set nocindent
+set noexpandtab
+set tabstop=4
+set shiftwidth=4
+
+" always show sign column (on the left) so that when lightbulb is used the column does not keep appearing and disappearing
+set scl=yes
+
+" TODO: not really working after update to neovim 0.11 - try later after other
+" plugins catch up
+" set winborder=rounded
+
+let mapleader = " "
+let maplocalleader = " "
+
+lua require('plugins')
+
+" source /home/radek/.config/nvim/plug33.vim
+"
+
+lua <<EOF
+
+--local opts = { noremap=true, silent=true }
+--vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+--vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+--vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+--vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- #capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+local lsp_status = require('lsp-status')
+
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  --vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  --vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+  --vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, bufopts)
+
+  lsp_status.on_attach(client)
+end
+
+-- TODO: does not work?
+vim.lsp.config('*', {
+  capabilities = capabilities,
+  on_attach = on_attach,
+})
+vim.lsp.config('pylsp', {
+-- i'm now using ruff so the following is not active
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          ignore = {'W191', 'E122', 'E265'},
+          maxLineLength = 9999
+        },
+        mccabe = {
+          enabled = false
+        }
+      }
+    }
+  }
+})
+vim.lsp.config('rust_analyzer', {
+  settings = {
+    ['rust-analyzer'] = {
+      diagnostics = {
+        enable = false;
+      }
+    }
+  }
+})
+
+vim.lsp.enable('pylsp')
+vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('clangd')
+vim.lsp.enable('cssls')
+vim.lsp.enable('ts_ls')
+vim.lsp.enable('tailwindcss')
+vim.lsp.enable('gopls')
+vim.lsp.enable('openscad_ls')
+
+vim.cmd([[ autocmd BufRead,BufNewFile *.scad set filetype=openscad ]])
+
+local luasnip = require('luasnip')
+local cmp = require('cmp')
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  sources = {
+    {name = 'nvim_lua'},
+    {name = 'nvim_lsp'},
+    --{name = 'path'},
+    --{name = 'luasnip'},
+    {name = 'buffer', keyword_length = 5},
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<CR>'] = cmp.mapping.confirm {
+      --behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    --['<Tab>'] = cmp.mapping(function(fallback)
+    --  if cmp.visible() then
+    --    cmp.select_next_item()
+    --  elseif luasnip.expand_or_jumpable() then
+    --    luasnip.expand_or_jump()
+    --  else
+    --    fallback()
+    --  end
+    --end, { 'i', 's' }),
+    --['<S-Tab>'] = cmp.mapping(function(fallback)
+    --  if cmp.visible() then
+    --    cmp.select_prev_item()
+    --  elseif luasnip.jumpable(-1) then
+    --    luasnip.jump(-1)
+    --  else
+    --    fallback()
+    --  end
+    --end, { 'i', 's' }),
+  }),
+}
+
+--require('nvim-lightbulb').setup({autocmd = {enabled = true}})
+
+--require'nvim-treesitter.configs'.setup {
+--  --ensure_installed = { "bash", "c", "clojure", "cpp", "dockerfile", "go", "hjson", "html", "javascript", "json", "lua", "make", "markdown", "pascal", "python", "rust", "vim", "yaml" },
+--  ensure_installed = "all",
+--  highlight = {
+--    enable = true
+--  }
+--}
+
+--require('rust-tools').setup()
+
+require('telescope').setup({
+  defaults = {
+    path_display = { "smart" },
+    --sorting_strategy = "ascending",
+    scroll_strategy = "limit",
+    layout_config = {
+      --prompt_position = "top",
+      width = 0.95,
+      --preview_width = 0.6,
+    },
+    mappings = {
+      i = {
+        ["<C-h>"] = "which_key",
+        ["<C-w>"] = function(prompt_bufnr)
+          -- Use nvim-window-picker to choose the window by dynamically attaching a function
+          local action_set = require('telescope.actions.set')
+          local action_state = require('telescope.actions.state')
+
+          local picker = action_state.get_current_picker(prompt_bufnr)
+          picker.get_selection_window = function(picker, entry)
+            local picked_window_id = require('window-picker').pick_window() or vim.api.nvim_get_current_win()
+            -- Unbind after using so next instance of the picker acts normally
+            picker.get_selection_window = nil
+            return picked_window_id
+          end
+
+          return action_set.edit(prompt_bufnr, 'edit')
+        end,
+      },
+    },
+  },
+  extensions = {
+    ["ui-select"] = {
+      require("telescope.themes").get_dropdown()
+    }
+  }
+})
+require("telescope").load_extension("ui-select")
+
+-- this is defined in on_attach but it doesn't seem to be working for all lsps (at least not rust lsp which is handled by rust-tools)
+--local bufopts = { noremap=true, silent=true, buffer=bufnr }
+--vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+
+-- this is defined in on_attach but it doesn't seem to be working for all lsps (at least not rust lsp which is handled by rustaceanvim)
+--local bufopts = { noremap=true, silent=true, buffer=bufnr }
+--vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+
+vim.diagnostic.config({
+  -- virtual_lines = true
+  virtual_lines = {
+    current_line = true,
+  },
+})
+
+
+EOF
+
+"let g:conjure#client_on_load = v:false
+"let g:conjure#client#python#stdio#command = "pipenv run python3 -iq"
+
+"set background=light
+set background=dark
+colorscheme vscode
+" colorscheme github_light
+
+" show trailing whitespace - this has to be set AFTER the theme is selected (so it gets broken on each runtime theme change?)
+" https://vim.wikia.com/wiki/Highlight_unwanted_spaces
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
+" do not skip wrapped lines (does not work in insert mode)
+" inoremap <Up> gk
+" inoremap <Down> gj
+nnoremap <Up> gk
+nnoremap <Down> gj
+
+nnoremap <M-o> <C-w>w
+
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+
+"nnoremap <leader>? <cmd>Telescope commands<cr>
+nnoremap <leader>C <cmd>Telescope commands<cr>
+nnoremap <leader>d <cmd>Telescope diagnostics<cr>
+nnoremap <leader>f <cmd>Telescope find_files<cr>
+nnoremap <leader>F :lua vim.lsp.buf.format()<cr>
+nnoremap <leader>/ <cmd>Telescope live_grep<cr>
+"nnoremap <leader>g <cmd>Telescope grep_string<cr>
+nnoremap <leader>? <cmd>Telescope grep_string<cr>
+nnoremap <leader>b <cmd>Telescope buffers<cr>
+nnoremap <leader>h <cmd>Telescope help_tags<cr>
+nnoremap <leader>s <cmd>Telescope lsp_document_symbols<cr>
+nnoremap <leader>S <cmd>Telescope lsp_workspace_symbols<cr>
+nnoremap gr <cmd>Telescope lsp_references<cr>
+nnoremap gd <cmd>Telescope lsp_definitions<cr>
+
+"nnoremap K <cmd>lua vim.lsp.buf.hover()<cr>
+"nnoremap <C-k> <cmd>lua vim.lsp.buf.signature_help()<cr>
+
+nnoremap <leader>h <cmd>HopWord<cr>
+nnoremap <leader>cc <cmd>BufferClose<cr>
+nnoremap <leader>i :lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<cr>
+
+" toggle light/dark variant of current theme
+nnoremap <Leader>T :if &background == "dark" \| set background=light \| else \| set background=dark \| endif<CR>
+
+nnoremap <M-/> :CommentToggle<CR>
+vnoremap <M-/> :<C-u>:'<,'>CommentToggle<cr>
+
+" https://blog.darkpan.com/posts/change-type-of-quotes-with-vim/
+" https://superuser.com/questions/816858/restore-previous-vim-search-term
+" Swap single for double quotes (and the other way around) for this chunk
+nnoremap <leader>' mqva"l:s/\%V"\%V/'/g<CR>`q
+" TODO: the following is supposed to keep the highlight but errors out - investigate
+"nnoremap <leader>' :call ToSingleQuotes()<CR>
+"function ToSingleQuotes()
+"  mqva"l:s/\%V"\%V/'/g<CR>`q
+"endfunction
+nnoremap <leader>" mqva'l:s/\%V'\%V/"/g<CR>`q
+" Add quotes around (at start of, and at end of) visually selected text
+vnoremap <leader>' <Esc>`>a'<Esc>`<i'<Esc>
+vnoremap <leader>" <Esc>`>a"<Esc>`<i"<Esc>
+
+" autocmd FileType python "Sleuth<CR>"
