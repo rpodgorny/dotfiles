@@ -3,7 +3,8 @@
     "allow": [
       "Bash(nvim:*)",
       "Bash(luac:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

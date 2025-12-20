@@ -1,7 +1,7 @@
 return {
   {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.4',
+    tag = 'v0.2.0',
     cmd = 'Telescope',
     keys = {
       { '<leader>C', '<cmd>Telescope commands<cr>' },
@@ -26,7 +26,7 @@ return {
         defaults = {
           path_display = { "smart" },
           scroll_strategy = "limit",
-          layout_config = { width = 0.95 },
+          layout_config = { width = 0.99 },
           borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },  -- Rounded borders
           mappings = {
             i = {
@@ -56,7 +56,7 @@ return {
   { 'nvim-telescope/telescope-ui-select.nvim', lazy = true },
   {
     's1n7ax/nvim-window-picker',
-    tag = 'v2.*',
+    -- tag = 'v2.4.0',
     lazy = true,
     config = function()
       require('window-picker').setup({
@@ -82,12 +82,11 @@ return {
   {
     'folke/which-key.nvim',
     event = "VeryLazy",
-    config = function()
-      require("which-key").setup({
-        window = {
-          border = "rounded",
-        },
-      })
-    end,
+    opts = {
+      preset = "classic",
+      win = {
+        border = "rounded",
+      },
+    },
   },
 }

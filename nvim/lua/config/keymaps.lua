@@ -9,21 +9,18 @@ map('n', '<M-o>', '<C-w>w', opts)
 map('n', '<C-d>', '<C-d>zz', opts)
 map('n', '<C-u>', '<C-u>zz', opts)
 
--- Telescope
-map('n', '<leader>C', '<cmd>Telescope commands<cr>', opts)
-map('n', '<leader>d', '<cmd>Telescope diagnostics<cr>', opts)
-map('n', '<leader>f', '<cmd>Telescope find_files<cr>', opts)
-map('n', '<leader>/', '<cmd>Telescope live_grep<cr>', opts)
-map('n', '<leader>?', '<cmd>Telescope grep_string<cr>', opts)
-map('n', '<leader>b', '<cmd>Telescope buffers<cr>', opts)
-map('n', '<leader>H', '<cmd>Telescope help_tags<cr>', opts)  -- Changed from <leader>h
-map('n', '<leader>s', '<cmd>Telescope lsp_document_symbols<cr>', opts)
-map('n', '<leader>S', '<cmd>Telescope lsp_workspace_symbols<cr>', opts)
-map('n', 'gr', '<cmd>Telescope lsp_references<cr>', opts)
-map('n', 'gd', '<cmd>Telescope lsp_definitions<cr>', opts)
-
--- Hop (keep <leader>h for HopWord, move help_tags to H)
-map('n', '<leader>h', '<cmd>HopWord<cr>', opts)
+-- Telescope (handled by lazy.nvim in lua/plugins/navigation.lua)
+-- map('n', '<leader>C', '<cmd>Telescope commands<cr>', opts)
+-- map('n', '<leader>d', '<cmd>Telescope diagnostics<cr>', opts)
+-- map('n', '<leader>f', '<cmd>Telescope find_files<cr>', opts)
+-- map('n', '<leader>/', '<cmd>Telescope live_grep<cr>', opts)
+-- map('n', '<leader>?', '<cmd>Telescope grep_string<cr>', opts)
+-- map('n', '<leader>b', '<cmd>Telescope buffers<cr>', opts)
+-- map('n', '<leader>H', '<cmd>Telescope help_tags<cr>', opts)  -- Changed from <leader>h
+-- map('n', '<leader>s', '<cmd>Telescope lsp_document_symbols<cr>', opts)
+-- map('n', '<leader>S', '<cmd>Telescope lsp_workspace_symbols<cr>', opts)
+-- map('n', 'gr', '<cmd>Telescope lsp_references<cr>', opts)
+-- map('n', 'gd', '<cmd>Telescope lsp_definitions<cr>', opts)
 
 -- LSP
 map('n', '<leader>F', vim.lsp.buf.format, opts)
@@ -31,9 +28,7 @@ map('n', '<leader>i', function()
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 end, opts)
 
--- Comment
-map('n', '<M-/>', ':CommentToggle<CR>', opts)
-map('v', '<M-/>', ":<C-u>:'<,'>CommentToggle<cr>", opts)
+-- Comment mapping is handled by lazy.nvim in lua/plugins/editing.lua
 
 -- Quote swapping
 map('n', '<leader>\'', 'mqva"l:s/\\%V"\\%V/\'/g<CR>`q', { noremap = true, silent = false })

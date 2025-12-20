@@ -1,8 +1,8 @@
-local lsp_status = require('lsp-status')
+-- TODO: this can be probably simplified
 local capabilities = vim.tbl_deep_extend(
   'force',
   require('cmp_nvim_lsp').default_capabilities(),
-  lsp_status.capabilities
+  {}
 )
 
 -- Add borders to LSP floating windows
@@ -36,8 +36,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, bufopts)
-
-  lsp_status.on_attach(client)
 end
 
 -- Configure default capabilities and on_attach

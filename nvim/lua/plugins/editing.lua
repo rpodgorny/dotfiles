@@ -1,7 +1,10 @@
 return {
   {
     'terrortylor/nvim-comment',
-    keys = { '<M-/>', { '<M-/>', mode = 'v' } },
+    keys = {
+      { '<M-/>', '<cmd>CommentToggle<cr>', mode = 'n' },
+      { '<M-/>', ":<C-u>:'<,'>CommentToggle<cr>", mode = 'v' },
+    },
     config = function()
       require('nvim_comment').setup()
     end,

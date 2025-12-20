@@ -15,12 +15,7 @@ return {
           },
           lualine_b = { 'diagnostics' },
           lualine_c = { 'filename', 'nvim_treesitter#statusline' },
-          lualine_x = {
-            function()
-              return require('lsp-status').status()
-            end,
-            'filetype'
-          },
+          lualine_x = { 'lsp_status', 'filetype' },
         }
       })
     end,
@@ -35,7 +30,7 @@ return {
   },
   {
     'akinsho/toggleterm.nvim',
-    tag = '*',
+    -- tag = 'v2.13.1',
     keys = {
       { '<c-\\>', mode = { 'n', 't' }, desc = 'Toggle terminal' },
     },
