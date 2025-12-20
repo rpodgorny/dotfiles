@@ -1,9 +1,8 @@
 # Selenized white (modifed heavily by Radek Podgorny)
 
-[cursor]
-color=ffffff 009a8a
-
 [colors]
+cursor=ffffff 009a8a
+
 background= ffffff
 foreground= 000000
 

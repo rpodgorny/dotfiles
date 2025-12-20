@@ -4,10 +4,9 @@
 # usr/bin/xterm -u8 -rv -vb +sb -fn -*-terminus-medium-*-*-*-18-*-*-*-*-*-iso10646-1 -tn xterm-256color -xrm XTerm*charClass: 0-32:1,33-126:2,127-160:3,161-255:2
 # still not perfect - see htop
 
-[cursor]
-color = 181818 56d8c9
-
 [colors]
+cursor = 181818 56d8c9
+
 background= 000000
 foreground= ffffff
 
