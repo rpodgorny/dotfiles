@@ -67,6 +67,7 @@ def main():
 	do('../dotfiles/niri', '~/.config/niri')
 	do('../dotfiles/ruff', '~/.config/ruff')
 	do('../dotfiles/sway_config', '~/.sway/config')
+	do('../dotfiles/waybar', '~/.config/waybar')
 
 	do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
 	do('../../dotfiles/foot.ini', '~/.config/foot/foot.ini')
