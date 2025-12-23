@@ -24,6 +24,8 @@
         "pulseaudio",
         "network",
         "power-profiles-daemon",
+        "disk",
+        "disk#/mnt/data",
         "cpu",
         //"memory",
         "temperature",
@@ -119,6 +121,9 @@
         "format": "{:%Y-%m-%d %H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": "{:%Y-%m-%d}"
+    },
+    "disk#/mnt/data": {
+        "path": "/mnt/data",
     },
     "cpu": {
         "format": "{usage}% {load} ",
