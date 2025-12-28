@@ -23,7 +23,6 @@
         //"idle_inhibitor",
         "pulseaudio",
         "network",
-        "power-profiles-daemon",
         "disk",
         "disk#/mnt/data",
         "cpu",
@@ -35,6 +34,7 @@
         //"niri/language",
         "battery",
         //"battery#bat2",
+        "power-profiles-daemon",
         "tray",
         "clock"
         //"custom/power"
