@@ -64,12 +64,11 @@ input {
         // middle-emulation
     }
 
-    // Uncomment this to make the mouse warp to the center of newly focused windows.
     warp-mouse-to-focus
 
     // Focus windows and outputs automatically when moving the mouse into them.
     // Setting max-scroll-amount="0%" makes it work only on windows already fully on screen.
-    focus-follows-mouse max-scroll-amount="95%"
+    focus-follows-mouse max-scroll-amount="75%"
 
     workspace-auto-back-and-forth
     disable-power-key-handling
@@ -121,6 +120,8 @@ output "DP-1" {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
 layout {
+    ///background-color "#990000"
+
     // Set gaps around windows in logical pixels.
     gaps 1
 
@@ -130,7 +131,12 @@ layout {
     // - "always", the focused column will always be centered.
     // - "on-overflow", focusing a column will center it if it doesn't fit
     //   together with the previously focused column.
-    center-focused-column "never"
+    ///center-focused-column "never"
+    center-focused-column "on-overflow"
+
+    //empty-workspace-above-first
+
+    always-center-single-column
 
     // You can customize the widths that "switch-preset-column-width" (Mod+R) toggles between.
     preset-column-widths {
@@ -149,7 +155,8 @@ layout {
     // preset-window-heights { }
 
     // You can change the default width of the new windows.
-    default-column-width { proportion 0.5; }
+    ///default-column-width { proportion 0.5; }
+    default-column-width { proportion 1.0; }
     // If you leave the brackets empty, the windows themselves will decide their initial width.
     // default-column-width {}
 
@@ -266,8 +273,8 @@ layout {
     // Top and bottom struts will simply add outer gaps in addition to the area occupied by
     // layer-shell panels and regular gaps.
     struts {
-        // left 64
-        // right 64
+        ///left 8
+        ///right 8
         // top 64
         // bottom 64
     }
@@ -367,6 +374,8 @@ binds {
     Mod+P { spawn-sh "bemenu-run -p '' --fn 'Terminus 20'"; }
     Mod+Shift+Escape { spawn "systemctl" "suspend"; }
     Ctrl+Escape { spawn-sh "light -s sysfs/leds/asus::kbd_backlight -r -S 1; sleep 5; light -s sysfs/leds/asus::kbd_backlight -r -S 0"; }
+    Mod+Shift+T { spawn "rptheme"; }
+    Mod+Shift+F { spawn "rpcpu" "toggle"; }
 
     Mod+Shift+W { spawn-sh "wofi --dmenu -p 'rename workspace' | xargs niri msg action set-workspace-name"; }
 
@@ -590,11 +599,12 @@ binds {
     Mod+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
     Mod+F { maximize-column; }
-    Mod+Shift+F { fullscreen-window; }
+    ///Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+F { fullscreen-window; }
 
     // Expand the focused column to space not taken up by other fully visible columns.
     // Makes the column "fill the rest of the space".
-    Mod+Ctrl+F { expand-column-to-available-width; }
+    ///Mod+Ctrl+F { expand-column-to-available-width; }
 
     Mod+C { center-column; }
 
@@ -609,21 +619,17 @@ binds {
     // * adjust width as a percentage of screen width: "-10%" or "+10%"
     // Pixel sizes use logical, or scaled, pixels. I.e. on an output with scale 2.0,
     // set-column-width "100" will make the column occupy 200 physical screen pixels.
-    Mod+Minus { set-column-width "-10%"; }
-    Mod+Equal { set-column-width "+10%"; }
+    Mod+Minus { set-column-width "-5%"; }
+    Mod+Equal { set-column-width "+5%"; }
 
     // Finer height adjustments when in column with other windows.
-    Mod+Shift+Minus { set-window-height "-10%"; }
-    Mod+Shift+Equal { set-window-height "+10%"; }
+    Mod+Shift+Minus { set-window-height "-5%"; }
+    Mod+Shift+Equal { set-window-height "+5%"; }
 
     // Move the focused window between the floating and the tiling layout.
     Mod+V       { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
-    // Toggle tabbed column display mode.
-    // Windows in this column will appear as vertical tabs,
-    // rather than stacked on top of each other.
-    ///Mod+W { toggle-column-tabbed-display; }
     Mod+T { toggle-column-tabbed-display; }
 
     // Actions to switch layouts.
