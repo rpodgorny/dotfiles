@@ -8,7 +8,8 @@
     // Choose the order of the modules
     "modules-left": [
         //"sway/workspaces",
-        "niri/workspaces"
+        "niri/workspaces",
+        "cffi/niri-windows"
         //"sway/mode",
         //"niri/mode",
         //"sway/scratchpad",
@@ -230,5 +231,8 @@
 			"suspend": "systemctl suspend",
 			"hibernate": "systemctl hibernate"
 		}
+    },
+    "cffi/niri-windows": {
+        "module_path": "/home/radek/.config/waybar/waybar-niri-windows.so",
     }
 }
