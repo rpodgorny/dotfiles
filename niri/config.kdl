@@ -92,7 +92,6 @@ output "eDP-1" {
     // Run `niri msg outputs` while inside a niri instance to list all outputs and their modes.
     ///mode "1920x1080@120.030"
 
-    // You can use integer or fractional scale, for example use 1.5 for 150% scale.
     scale 1
 
     // Transform allows to rotate the output counter-clockwise, valid values are:
@@ -371,12 +370,14 @@ gestures {
 
 binds {
     Mod+Shift+Return hotkey-overlay-title="Spawn terminal" { spawn "term"; }
-    Mod+P { spawn-sh "bemenu-run -p '' --fn 'Terminus 20'"; }
+    //Mod+P { spawn-sh "bemenu-run -p '' --fn 'Terminus 20'"; }
+    Mod+P { spawn-sh "bemenu-run -p '' --fn 'JetBrainsMono Nerd Font 15'"; }
     Mod+Shift+Escape { spawn "systemctl" "suspend"; }
     Ctrl+Escape { spawn-sh "light -s sysfs/leds/asus::kbd_backlight -r -S 1; sleep 5; light -s sysfs/leds/asus::kbd_backlight -r -S 0"; }
     Mod+Shift+T { spawn "rptheme"; }
     Mod+Shift+F { spawn "rpcpu" "toggle"; }
 
+    Mod+W { spawn-sh "wofi --dmenu -p 'rename workspace' | xargs niri msg action set-workspace-name"; }
     Mod+Shift+W { spawn-sh "wofi --dmenu -p 'rename workspace' | xargs niri msg action set-workspace-name"; }
 
     // Keys consist of modifiers separated by + signs, followed by an XKB key name
