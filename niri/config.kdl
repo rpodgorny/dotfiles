@@ -96,7 +96,7 @@ output "eDP-1" {
 
     // Transform allows to rotate the output counter-clockwise, valid values are:
     // normal, 90, 180, 270, flipped, flipped-90, flipped-180 and flipped-270.
-    transform "normal"
+    ///transform "normal"
 
     // Position of the output in the global coordinate space.
     // This affects directional monitor actions like "focus-monitor-left", and cursor movement.
@@ -131,7 +131,7 @@ layout {
     // - "on-overflow", focusing a column will center it if it doesn't fit
     //   together with the previously focused column.
     ///center-focused-column "never"
-    center-focused-column "on-overflow"
+    ///center-focused-column "on-overflow"
 
     //empty-workspace-above-first
 
@@ -154,8 +154,8 @@ layout {
     // preset-window-heights { }
 
     // You can change the default width of the new windows.
-    ///default-column-width { proportion 0.5; }
-    default-column-width { proportion 1.0; }
+    default-column-width { proportion 0.5; }
+    ///default-column-width { proportion 1.0; }
     // If you leave the brackets empty, the windows themselves will decide their initial width.
     // default-column-width {}
 
