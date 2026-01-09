@@ -30,7 +30,7 @@
         //"memory",
         "temperature",
         //"backlight",
-        "keyboard-state",
+        //"keyboard-state",
         //"sway/language",
         //"niri/language",
         "battery",
@@ -234,6 +234,6 @@
 		}
     },
     "cffi/niri-windows": {
-        "module_path": "/home/radek/.config/waybar/waybar-niri-windows.so",
+        "module_path": "/home/radek/.config/waybar/waybar-niri-windows.so"
     }
 }
