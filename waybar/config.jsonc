@@ -184,7 +184,7 @@
         "family": "ipv4_6",
         "format-wifi": "   {essid} ({signalStrength}%) {frequency}",
         "format-ethernet": "",
-        "tooltip-format": "{ipaddr}/{cidr}\n\n{ifname} via {gwaddr}",
+        "tooltip-format": "{ipaddr}\n\n{ifname} via {gwaddr}",
         "format-linked": " {ifname} (No IP)",
         "format-disconnected": "⚠ Disconnected",
         ///"format-alt": "{ifname}: {ipaddr}/{cidr}"
