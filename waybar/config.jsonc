@@ -11,7 +11,6 @@
         "niri/workspaces",
         "cffi/niri-windows"
         //"sway/mode",
-        //"niri/mode",
         //"sway/scratchpad",
         //"custom/media"
     ],
@@ -29,7 +28,7 @@
         "cpu",
         //"memory",
         "temperature",
-        //"backlight",
+        "backlight",
         //"keyboard-state",
         //"sway/language",
         //"niri/language",
@@ -154,11 +153,11 @@
             "critical": 15
         },
         "format": "{icon}  {capacity}% {time}",
-        "format-full": "{icon}  {capacity}% {time} ",
+        "format-full": "{icon}  {capacity}% {time}",
         "format-charging": " {capacity}% {time}",
         //"format-plugged": " {capacity}%",
         "format-plugged": " {capacity}% {time}",
-        "format-alt": "{icon} {time}",
+        ///"format-alt": "{icon} {time}",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
         "format-icons": ["", "", "", "", ""],
