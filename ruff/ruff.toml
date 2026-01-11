@@ -1,1 +1,1 @@
-line-length = 9999
+line-length = 320  # this the maximum ruff will accept
