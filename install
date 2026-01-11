@@ -58,6 +58,7 @@ def main():
 	do('dotfiles/zshrc', '~/.zshrc')
 	do('dotfiles/zprofile', '~/.zprofile')
 
+	do('../dotfiles/btop', '~/.config/btop')
 	do('../dotfiles/ssh_config', '~/.ssh/config')
 	do('../dotfiles/i3_config', '~/.i3/config')
 	do('../dotfiles/gpg.conf', '~/.gnupg/gpg.conf')
