@@ -34,8 +34,8 @@ input {
     touchpad {
         // off
         tap
-        dwt
-        dwtp
+        ///dwt
+        ///dwtp
         // drag false
         drag-lock
         natural-scroll
@@ -435,8 +435,10 @@ binds {
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,
     // or do a four-finger swipe up on a touchpad.
-    ///Mod+O repeat=false { toggle-overview; }
-    Mod+Space repeat=false { toggle-overview; }
+    Mod+O repeat=false { toggle-overview; }
+
+    Mod+Space repeat=false { focus-monitor-next; }
+    Mod+Ctrl+Space repeat=false { move-workspace-to-monitor-next; }
 
     Mod+Q repeat=false { close-window; }
 
