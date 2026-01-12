@@ -64,6 +64,10 @@ input {
         // middle-emulation
     }
 
+    touch {
+        map-to-output "eDP-1"
+    }
+
     warp-mouse-to-focus
 
     // Focus windows and outputs automatically when moving the mouse into them.
@@ -111,6 +115,11 @@ output "eDP-1" {
 }
 
 output "DP-1" {
+    scale 1
+    position x=0 y=-1080
+}
+
+output "HDMI-A-1" {
     scale 1
     position x=0 y=-1080
 }
@@ -286,6 +295,7 @@ layout {
 
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
+spawn-at-startup "swayidle" "-w" "lock" "swaylock -f -c 555555" "before-sleep" "loginctl lock-session" "timeout" "600" "loginctl lock-session" "timeout" "601" "niri msg action power-off-monitors"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
