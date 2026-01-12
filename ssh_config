@@ -10,30 +10,42 @@ VerifyHostKeyDNS yes
 #  VisualHostKey yes
 #  ForwardAgent no
 
+# the IdentityFile is duplicated to support both direct decrypted key file access
+# and private keys loaded to ssh-agent
+# (note that for the ssh-agent case only the .pub files are included - the associated
+# private key is extracted from the ssh-agent by fingerprint)
+
 Host aur.archlinux.org
   IdentitiesOnly yes
-  IdentityFile ~/dotfiles/decrypted/id_rsa_aur
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_aur
+  IdentityFile ~/.ssh/from_agent/id_rsa_aur.pub
 
 Host github.com
   IdentitiesOnly yes
-  IdentityFile ~/dotfiles/decrypted/id_rsa_github
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_github
+  IdentityFile ~/.ssh/from_agent/id_rsa_github.pub
 
 Host bitbucket.org
   IdentitiesOnly yes
-  IdentityFile ~/dotfiles/decrypted/id_rsa_bitbucket
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_bitbucket
+  IdentityFile ~/.ssh/from_agent/id_rsa_bitbucket.pub
 
 Host git.asterix.cz
   IdentitiesOnly yes
-  IdentityFile ~/dotfiles/decrypted/id_rsa_git_asterix_cz
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_git_asterix_cz
+  IdentityFile ~/.ssh/from_agent/id_rsa_git_asterix_cz.pub
 
 Host archlinux.podgorny.cz
   IdentitiesOnly yes
-  IdentityFile ~/dotfiles/decrypted/id_rsa_archlinux_podgorny_cz
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_archlinux_podgorny_cz
+  IdentityFile ~/.ssh/from_agent/id_rsa_archlinux_podgorny_cz.pub
 
 Host atxpkg.asterix.cz
   IdentitiesOnly yes
-  IdentityFile ~/dotfiles/decrypted/id_rsa_atxpkg
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_atxpkg
+  IdentityFile ~/.ssh/from_agent/id_rsa_atxpkg.pub
 
 Host atxpkg-dev.asterix.cz
   IdentitiesOnly yes
-  IdentityFile ~/dotfiles/decrypted/id_rsa_atxpkg
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_atxpkg
+  IdentityFile ~/.ssh/from_agent/id_rsa_atxpkg.pub
