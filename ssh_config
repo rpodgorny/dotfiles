@@ -15,6 +15,11 @@ VerifyHostKeyDNS yes
 # (note that for the ssh-agent case only the .pub files are included - the associated
 # private key is extracted from the ssh-agent by fingerprint)
 
+# without this record, connecting to any host tries to use all ssh-agent keys and
+# you get fucked for too many failed attempts
+Host *
+  IdentitiesOnly yes
+
 Host aur.archlinux.org
   IdentitiesOnly yes
   IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_aur
