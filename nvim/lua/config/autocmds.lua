@@ -13,8 +13,10 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end,
 })
 
+-- TODO: can't this be merged with the above somehow?
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
-    vim.fn.matchadd("ExtraWhitespace", [[\s\+$]])
+    vim.cmd("match ExtraWhitespace /\\s\\+$/")
+    vim.api.nvim_set_hl(0, "ExtraWhitespace", { bg = "#FF0000" })
   end,
 })
