@@ -54,3 +54,8 @@ Host atxpkg-dev.asterix.cz
   IdentitiesOnly yes
   IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_atxpkg
   IdentityFile ~/.ssh/from_agent/id_rsa_atxpkg.pub
+
+Host deb.asterix.cz
+  IdentitiesOnly yes
+  IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_deb_asterix_cz
+  IdentityFile ~/.ssh/from_agent/id_rsa_deb_asterix_cz.pub
