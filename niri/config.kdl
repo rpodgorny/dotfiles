@@ -302,8 +302,10 @@ layout {
 // See the binds section below for more spawn examples.
 
 spawn-at-startup "waybar"
-spawn-at-startup "mako"
-spawn-at-startup "swayidle" "-w" "lock" "swaylock -f -c 555555" "before-sleep" "loginctl lock-session" "timeout" "600" "loginctl lock-session" "timeout" "601" "niri msg action power-off-monitors"
+spawn-at-startup "mako" "--default-timeout" "5000"
+spawn-at-startup "swayidle" "-w" "lock" "swaylock -f -c 555555; niri msg action power-off-monitors" "before-sleep" "loginctl lock-session" "after-resume" "niri msg action power-on-monitors" "timeout" "600" "loginctl lock-session"
+
+spawn-sh-at-startup "while true; do niri_unset_name_on_empty_workspaces; sleep 2; done"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -388,6 +390,12 @@ gestures {
 
 binds {
     Mod+Shift+Return hotkey-overlay-title="Spawn terminal" { spawn "term"; }
+    Mod+Grave hotkey-overlay-title="Spawn terminal (alternative)" { spawn "term"; }
+
+    Mod+Z { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "--wtype" "--provider" "google" "toggle"; }
+
+    Mod+U { spawn "niri_focus_urgent_window"; }
+
     //Mod+P { spawn-sh "bemenu-run -p '' --fn 'Terminus 20'"; }
     Mod+P { spawn-sh "bemenu-run -p '' --fn 'JetBrainsMono Nerd Font 15'"; }
     Mod+Shift+Escape { spawn "systemctl" "suspend"; }
@@ -456,7 +464,7 @@ binds {
     Mod+O repeat=false { toggle-overview; }
 
     Mod+Space repeat=false { focus-monitor-next; }
-    Mod+Ctrl+Space repeat=false { move-workspace-to-monitor-next; }
+    Mod+Shift+Space repeat=false { move-workspace-to-monitor-next; }
 
     Mod+Q repeat=false { close-window; }
 
@@ -522,11 +530,11 @@ binds {
 
     Mod+Page_Down      { focus-workspace-down; }
     Mod+Page_Up        { focus-workspace-up; }
-    Mod+U              { focus-workspace-down; }
+    ///Mod+U              { focus-workspace-down; }
     Mod+I              { focus-workspace-up; }
     Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
     Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
-    Mod+Ctrl+U         { move-column-to-workspace-down; }
+    ///Mod+Ctrl+U         { move-column-to-workspace-down; }
     Mod+Ctrl+I         { move-column-to-workspace-up; }
 
     // Alternatively, there are commands to move just a single window:
