@@ -95,9 +95,9 @@ output "eDP-1" {
     // for the resolution.
     // If the mode is omitted altogether or is invalid, niri will pick one automatically.
     // Run `niri msg outputs` while inside a niri instance to list all outputs and their modes.
-    ///mode "1920x1080@120.030"
+    ///mode "2880x1800@60.001"
 
-    scale 1
+    scale 1.5
 
     // Transform allows to rotate the output counter-clockwise, valid values are:
     // normal, 90, 180, 270, flipped, flipped-90, flipped-180 and flipped-270.
@@ -128,6 +128,7 @@ output "DP-1" {
     position x=0 y=-1080
 }
 
+// external display
 output "HDMI-A-1" {
     scale 1
     position x=0 y=-1080
@@ -191,7 +192,7 @@ layout {
     // You can change how the focus ring looks.
     focus-ring {
         // Uncomment this line to disable the focus ring.
-        // off
+        //off
 
         // How many logical pixels the ring extends out from the windows.
         width 1
@@ -232,8 +233,9 @@ layout {
         // If you enable the border, you probably want to disable the focus ring.
         off
 
-        width 4
-        active-color "#ffc87f"
+        width 2
+        ///active-color "#ffc87f"
+        active-color "#7fc8ff"
         inactive-color "#505050"
 
         // Color of the border around windows that request your attention.
@@ -302,7 +304,8 @@ layout {
 // which may be more convenient to use.
 // See the binds section below for more spawn examples.
 
-spawn-at-startup "waybar"
+///spawn-at-startup "waybar"
+spawn-at-startup "retry" "waybar"  // the bitch keeps crashing
 spawn-at-startup "mako" "--default-timeout" "5000"
 spawn-at-startup "swayidle" "-w" "lock" "swaylock -f -c 555555; niri msg action power-off-monitors" "before-sleep" "loginctl lock-session" "after-resume" "niri msg action power-on-monitors" "timeout" "600" "loginctl lock-session"
 
@@ -393,16 +396,31 @@ binds {
     Mod+Shift+Return hotkey-overlay-title="Spawn terminal" { spawn "term"; }
     Mod+Grave hotkey-overlay-title="Spawn terminal (alternative)" { spawn "term"; }
 
-    Mod+Z { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "--wtype" "--provider" "google" "toggle"; }
+    Mod+B hotkey-overlay-title="Spawn browser" { spawn "brave"; }
+
+    Mod+Less { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "--typer=ydotool" "--track-window" "toggle"; }
+    Mod+Shift+Less { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "--typer=ydotool" "--enter" "--track-window" "toggle"; }
+
+    ///Mod+Less { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "--wtype" "--track-window"; }
+    ///Mod+Shift+Less { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "--wtype" "--track-window" "--enter"; }
+    ///Mod+Less on_release=true { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "stop"; }
+    ///Mod+Shift+Less on_release=true { spawn "/home/radek/sync/work/rpdictation/target/release/rpdictation" "stop"; }
 
     Mod+U { spawn "niri_focus_urgent_window"; }
 
     //Mod+P { spawn-sh "bemenu-run -p '' --fn 'Terminus 20'"; }
     Mod+P { spawn-sh "bemenu-run -p '' --fn 'JetBrainsMono Nerd Font 15'"; }
-    Mod+Shift+Escape { spawn "systemctl" "suspend"; }
-    Ctrl+Escape { spawn-sh "light -s sysfs/leds/asus::kbd_backlight -r -S 1; sleep 5; light -s sysfs/leds/asus::kbd_backlight -r -S 0"; }
+    //Mod+Shift+Escape { spawn "systemctl" "suspend"; }
+    Mod+Shift+Escape allow-when-locked=true { spawn "systemctl" "hibernate"; }
+    //Ctrl+Escape allow-when-locked=true { spawn-sh "light -s sysfs/leds/asus::kbd_backlight -r -S 1; sleep 5; light -s sysfs/leds/asus::kbd_backlight -r -S 0"; }
+    Ctrl+Escape allow-when-locked=true { spawn-sh "echo backlight_low >/tmp/zenbook-duo-daemon.pipe; sleep 5; echo backlight_off >/tmp/zenbook-duo-daemon.pipe"; }
     Mod+Shift+T { spawn "rptheme"; }
-    Mod+Shift+F { spawn "rpcpu" "toggle"; }
+    ///Mod+Shift+F { spawn "rpcpu" "toggle"; }
+    Mod+Shift+F { spawn "power-profile-cycle"; }
+    Mod+Shift+S { spawn-sh "notify-send 'starting wifi scan' -t 1000; lswifi"; }
+
+    // TODO: this should be XF86Assistant but it does nothing - why?
+    //Menu { spawn "term"; }
 
     Mod+W { spawn-sh "wofi --dmenu -p 'rename workspace' | xargs niri msg action set-workspace-name"; }
     Mod+Shift+W { spawn-sh "niri msg action unset-workspace-name"; }
@@ -529,10 +547,12 @@ binds {
     // Mod+Shift+Ctrl+Left  { move-workspace-to-monitor-left; }
     // ...
 
-    Mod+Page_Down      { focus-workspace-down; }
-    Mod+Page_Up        { focus-workspace-up; }
+    //Mod+Page_Down      { focus-workspace-down; }
+    Mod+Page_Down      { focus-workspace-down-or-first; }
+    //Mod+Page_Up        { focus-workspace-up; }
+    Mod+Page_Up        { focus-workspace-up-or-last; }
     ///Mod+U              { focus-workspace-down; }
-    Mod+I              { focus-workspace-up; }
+    ///Mod+I              { focus-workspace-up; }
     Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
     Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
     ///Mod+Ctrl+U         { move-column-to-workspace-down; }
@@ -544,8 +564,8 @@ binds {
 
     Mod+Shift+Page_Down { move-workspace-down; }
     Mod+Shift+Page_Up   { move-workspace-up; }
-    Mod+Shift+U         { move-workspace-down; }
-    Mod+Shift+I         { move-workspace-up; }
+    ///Mod+Shift+U         { move-workspace-down; }
+    ///Mod+Shift+I         { move-workspace-up; }
 
     // You can bind mouse wheel scroll ticks using the following syntax.
     // These binds will change direction based on the natural-scroll setting.
