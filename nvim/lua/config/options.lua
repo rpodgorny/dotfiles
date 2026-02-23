@@ -2,7 +2,7 @@ local opt = vim.opt
 
 -- UI
 opt.termguicolors = true
-opt.background = "dark"
+-- opt.background = "dark"  -- let nvim 0.11+ auto-detect from terminal
 opt.encoding = "utf-8"
 opt.mouse = ""
 opt.signcolumn = "yes"

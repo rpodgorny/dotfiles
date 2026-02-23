@@ -9,17 +9,25 @@ return {
       vim.cmd('colorscheme vscode')
     end,
   },
-  {
-    'itsfernn/auto-gnome-theme.nvim',
-    lazy = false,  -- Load at startup to monitor system theme
-    priority = 999,  -- Load just before vscode theme (which has priority 1000)
-    dependencies = { 'Mofiqul/vscode.nvim' },  -- Ensure vscode theme is available
-    config = function()
-      require('auto-gnome-theme').setup({
-        theme = 'vscode'  -- Use vscode theme which has built-in light/dark variants
-      })
-    end,
-  },
+  -- Disabled: nvim 0.11+ natively detects OS dark/light mode changes via
+  -- terminal mode 2031, making this plugin unnecessary. The plugin also leaks
+  -- orphaned `gsettings monitor` processes on every nvim exit.
+  -- Limitations of the native feature vs. this plugin:
+  --   - Only updates 'background', can't switch between two different colorschemes
+  --   - Only works if 'bg' is not explicitly set
+  -- See: https://github.com/neovim/neovim/commit/d460928263d0
+  --      https://github.com/itsfernn/auto-gnome-theme.nvim/issues/2
+  -- {
+  --   'itsfernn/auto-gnome-theme.nvim',
+  --   lazy = false,
+  --   priority = 999,
+  --   dependencies = { 'Mofiqul/vscode.nvim' },
+  --   config = function()
+  --     require('auto-gnome-theme').setup({
+  --       theme = 'vscode'
+  --     })
+  --   end,
+  -- },
   { 'RRethy/nvim-base16', lazy = true },
   { 'jschmold/sweet-dark.vim', lazy = true },
   { 'tjdevries/colorbuddy.vim', lazy = true },
