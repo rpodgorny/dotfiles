@@ -28,7 +28,7 @@
         "cpu",
         //"memory",
         "temperature",
-        "backlight",
+        //"backlight",
         //"keyboard-state",
         //"sway/language",
         //"niri/language",
@@ -110,7 +110,7 @@
     },
     "tray": {
         // "icon-size": 21,
-        "spacing": 10,
+        "spacing": 10
         // "icons": {
         //   "blueman": "bluetooth",
         //   "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
@@ -123,7 +123,7 @@
         ///"format-alt": "{:%Y-%m-%d}"
     },
     "disk#/mnt/data": {
-        "path": "/mnt/data",
+        "path": "/mnt/data"
     },
     "cpu": {
         "format": "  {usage}% {load}",
