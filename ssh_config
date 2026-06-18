@@ -20,6 +20,10 @@ VerifyHostKeyDNS yes
 Host *
   IdentitiesOnly yes
 
+# TODO: remove after all plants are migrated to modern linux
+Host mj*.asterix.cz
+  WarnWeakCrypto no-pq-kex
+
 Host aur.archlinux.org
   IdentitiesOnly yes
   IdentityFile ~/dotfiles/decrypted/ssh/id_rsa_aur
