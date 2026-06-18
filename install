@@ -61,6 +61,7 @@ def main():
 	do('../dotfiles/btop', '~/.config/btop')
 	do('../dotfiles/ssh_config', '~/.ssh/config')
 	do('../dotfiles/i3_config', '~/.i3/config')
+	do('../dotfiles/ghostty', '~/.config/ghostty')
 	do('../dotfiles/gpg.conf', '~/.gnupg/gpg.conf')
 	do('../dotfiles/default.tigervnc', '~/.vnc/default.tigervnc')
 	do('../dotfiles/flake8', '~/.config/flake8')
