@@ -59,16 +59,10 @@ Do this **before** proposing a version — the entries are what the user will us
 
 Run `scripts/commits-since-last-tag.sh` to get the last tag (or `FIRST_RELEASE:` marker) and the commit list since then. Keep this list; you'll need it in step 5.
 
-Look for `CHANGELOG.md`, `CHANGES.md`, or `HISTORY.md` (case-insensitive).
+Apply the **`changelog` skill** to turn that commit list into entries. It owns everything about what an entry says, which convention the file follows, and how irreversible changes get flagged. Two release-time deltas:
 
-- **If one exists:** read it and match its existing convention. Write only the *entries* for the new changes into the unreleased area — do NOT pick a version number or date yet. Typical patterns:
-  - Keep a Changelog style → fill in (or create) the `[Unreleased]` section with human-readable entries derived from the commit list.
-  - Flat version sections → write a new placeholder section at the top titled `Unreleased` (or similar) with the entries. It will be retitled with the real version in step 7.
-  - Free-form prose → draft an unreleased paragraph in the project's style.
-  - If you can't tell the pattern from the existing file, ask the user.
-- **If none exists:** do NOT create one. Just hold the list of human-readable entries in memory to show the user in step 5, and note the missing changelog in the final report.
-
-Changelog entries should be human-readable, not raw commit subjects. Rewrite terse commit messages into complete sentences — but keep them **short and concise**, ideally one line each. State what changed; do not explain motivation, implementation, or history. If a single sentence isn't enough, the entry is probably trying to say too much — split it or trim it. When an entry corresponds to a backward-incompatible change (one that makes downgrade non-trivial — see step 5), call that out explicitly in the entry (e.g. prefix with `**Irreversible:**`) and match whatever "breaking" highlighting the project's changelog already uses.
+- Write only the *entries*, into the unreleased area. The version number and date are step 5's decision, not yours here.
+- **If no changelog file exists:** do not create one. Hold the entries to show the user in step 5, and note the missing changelog in the final report.
 
 ## 5. Propose the version bump and confirm with the user
 
@@ -93,11 +87,7 @@ Infer the bump level from conventional commit prefixes:
 
 In the two-part scheme, "patch" and "minor" collapse into a single second-number bump — both fixes and features bump it. Only major-warranting changes bump the first number.
 
-**Major means either direction breaks.** Forward-incompatibility (the upgrade breaks existing callers) is what conventional commits already mark with `!` / `BREAKING CHANGE:`. Backward-incompatibility (after upgrading, the user cannot simply downgrade without data loss or manual recovery) has no standard marker, so you have to look for it yourself:
-
-- Inspect each `feat:` / `fix:` for signals: commits that touch a `migrations/`, `alembic/`, `db/migrate/`, `prisma/migrations/`, or similar directory; commits whose subjects or bodies mention "migration", "schema", "data format", "on-disk", "storage layout", "rename column", "drop column", "move config", or "new state file".
-- If any candidate is found and is not already flagged with `BREAKING CHANGE:` / `!`, surface it in the step-5 confirmation prompt and ask the user explicitly: *"Is this change reversible — can a user downgrade after applying it without data loss or manual recovery?"* If the answer is no (or unclear), propose **major**.
-- A change can be backward-incompatible without being forward-incompatible — e.g. a DB migration that adds a column the old code happily ignores. The API surface is intact, but a downgrade still loses or corrupts data. Bump major.
+**Major means either direction breaks.** Forward-incompatibility (the upgrade breaks existing callers) is what conventional commits already mark with `!` / `BREAKING CHANGE:`. Backward-incompatibility has no standard marker, so you hunt for it: the `changelog` skill's **irreversible** rules define what counts and list the signals to grep for. Any unflagged candidate goes into the step-5 prompt with its downgrade question attached; if the answer is no or unclear, propose **major**.
 
 **Explicit argument.** If the user invoked this skill with an explicit level (`/release minor`, `/release major`), use that as the proposal — but still print the commit list and the level you *would* have inferred, so the user can sanity-check the override.
 
@@ -127,13 +117,9 @@ Compute the new version by applying the confirmed bump to the existing version s
 
 ## 7. Finalize the changelog
 
-Promote the unreleased section from step 4 to a versioned section for `<new-version>` dated `<YYYY-MM-DD>` (today). For Keep-a-Changelog style, leave a fresh `[Unreleased]` above it. For flat-section style, retitle the placeholder with the new version and date. Match the repo's existing format exactly.
+Apply the `changelog` skill's release-time rules with `<new-version>` and today's date: promote the unreleased section, drop empty headings from the released section, scaffold a fresh `[Unreleased]`.
 
-**Released sections carry no empty headings.** Delete every `### Added` / `### Changed` / `### Fixed` (etc.) subsection in the released section that has no entries under it. A released section lists only the categories that actually changed.
-
-**The fresh `[Unreleased]` is always scaffolded** with the full set of six headings, empty, in canonical order — `### Added`, `### Changed`, `### Deprecated`, `### Removed`, `### Fixed`, `### Security`. They are placeholders for the next release to fill in, so leave them empty rather than adding "nothing yet" / "N/A" filler text. Separate them with a blank line, even when the file packs entries directly under their headings elsewhere — the placeholders are the one place that spacing always applies. Never leave the new `[Unreleased]` as a bare heading.
-
-If there is no changelog file, skip this step — it was already noted as a warning in step 4.
+If there is no changelog file, skip this step. It was already noted as a warning in step 4.
 
 ## 8. Docs check (report-only)
 

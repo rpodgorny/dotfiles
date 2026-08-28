@@ -102,17 +102,25 @@ Call it out inline, matching whatever highlighting the project already uses:
 ```
 
 Check for these by looking for commits touching `migrations/`, `alembic/`, `db/migrate/`,
-`prisma/migrations/`, or mentioning "migration", "schema", "on-disk", "storage layout", "drop
-column". When you find a candidate that isn't already flagged, ask the user whether a downgrade is
-safe rather than guessing.
+`prisma/migrations/`, or mentioning "migration", "schema", "data format", "on-disk", "storage
+layout", "rename column", "drop column", "move config", or "new state file". A change can be
+irreversible without being forward-incompatible: a migration that adds a column the old code ignores
+leaves the API intact but still loses data on downgrade.
+
+When you find a candidate that isn't already flagged with `!` / `BREAKING CHANGE:`, ask the user
+outright: *"Can a user downgrade after applying this without data loss or manual recovery?"* Never
+guess.
 
 ## 6. Unreleased vs released sections
 
 **Adding entries for work in progress** — put them under `## [Unreleased]`, in the right subsection.
-Create the subsection if it isn't there yet.
+Create the subsection if it isn't there yet. A file with no `[Unreleased]` convention gets a
+placeholder section at the top instead: flat-section style, a bare `## Unreleased`; free-form prose,
+an unreleased paragraph in the project's voice.
 
-**At release time** — promote `[Unreleased]` to a versioned section titled with the new version and
-today's date, then leave a fresh `[Unreleased]` above it. The version number itself is
+**At release time** — promote the unreleased section to a versioned one titled with the new version
+and today's date, then leave a fresh `[Unreleased]` above it. For a flat or free-form file, retitle
+the placeholder in place; there is no fresh section to scaffold. The version number itself is
 `/release`'s decision, not this skill's; don't pick one here.
 
 **Released sections carry no empty headings.** Delete every `### Added` / `### Changed` / `### Fixed`
