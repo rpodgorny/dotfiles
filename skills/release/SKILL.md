@@ -83,7 +83,22 @@ All applicable categories must pass. Use ecosystem defaults:
 
 **Missing tools.** If a category's tool is not configured for the project (e.g. no `mypy` in `pyproject.toml`, no lint script in `package.json`), note it in the final report and skip that one category. Do not invent configuration to make a check possible.
 
-**Failure.** If any configured check fails, stop. Report the failure concisely with the actual error output. Do not attempt fixes unless the user asks.
+**Failure — tests, types, security.** Stop. Report the failure concisely with the actual error output. Do not attempt fixes unless the user asks.
+
+**Failure — lint and format.** Do not stop on the exit code alone. A linter upgrade or a newly tightened rule fails on code nobody touched this cycle, and blocking a release on that is wrong. Triage first, then decide:
+
+1. Collect the `file:line` of every finding from the linter output.
+2. Run `scripts/triage-lint.sh <file:line> ...`. For each location it blames the line and checks whether the commit that last touched it is an ancestor of the last release tag.
+3. Branch on the verdicts:
+
+| Verdicts | Gate | What to do |
+|---|---|---|
+| any `INTRODUCED` or `UNKNOWN` | hard | This cycle's work broke lint. Stop and report, same as any other failed check. |
+| all `PRE-EXISTING` | soft | Report each finding with the commit and date that introduced it, then ask with AskUserQuestion: **"Continue the release"** (lead with this, the findings predate this cycle) vs **"Stop and fix lint first"**. |
+
+`UNKNOWN` counts as introduced deliberately. No prior tag, a blame that fails, or a finding with no line number is a reason to look, not a reason to wave through.
+
+A waived finding is still a finding. Do not fix it as part of the release — that pollutes the release commit, and step 9 stages manifest, lockfile, changelog and version-string files only. Carry every waived finding into the step 10 summary.
 
 ## 4. Populate the changelog's unreleased section
 
@@ -183,7 +198,7 @@ Match the existing tag style: check `git tag --list | tail -5`. If the project u
 Then print a concise summary of what was done:
 
 - **New version** and bump level.
-- **Checks** that ran and passed (and any skipped because the project didn't configure them).
+- **Checks** that ran and passed, any skipped because the project didn't configure them, and any pre-existing lint findings waived in step 3 (with the commit that introduced each).
 - **Files in the release commit.**
 - **Docs warnings** from step 8, if any.
 - **The tag that was created.**

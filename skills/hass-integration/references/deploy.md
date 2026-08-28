@@ -1,43 +1,86 @@
-# Test rig and deploy loop
+# Deploy loop for a target
 
-## The rig
+There is more than one target: several sites, plus the Ducato van. The loop
+below is the same everywhere; what changes per target is the row in the table.
+Establish the row before deploying, and never assume the last target's values.
 
-| Host | Role |
-|---|---|
-| **rpi400** | Home Assistant, rootful podman, unit `hass-hajenka`, config at `/docker_volumes/hass_hajenka` → `/config` in the container |
-| **pokuston** | Raspberry Pi with the hardware attached (USB M-Bus master on `/dev/ttyUSB0`). 423 MB RAM, no swap — do not install anything on it |
+## Targets
 
-**There is no direct ssh from the workstation to either.** Shells are tmux
-sessions (`rpi400`, `mbus` for pokuston); check `tmux ls` for what exists.
+Each target needs: the shell you reach it through, the HA host with its unit
+name and config path, the host the hardware hangs off, and how files get across.
+
+| | hajenka | ducato van |
+|---|---|---|
+| **HA host** | rpi400, rootful podman, container `hass_hajenka`, unit `hass-hajenka`, config `/docker_volumes/hass_hajenka` → `/config` | bydlicoin (aarch64 Arch Linux ARM), rootful podman, container `hass_bydlicoin`, unit `hass-bydlicoin.service`, config `/docker_volumes/hass_bydlicoin` → `/config` |
+| **Hardware** | pokuston, a separate box: USB M-Bus master on `/dev/ttyUSB0`. 423 MB RAM, no swap, install nothing on it | on the HA box itself: BLE through `hci0`, no serial devices at all. Installed: `renogy`, `truma_inetx`, `tplink_m7200`, `hacs` |
+| **Shells** | tmux sessions `rpi400` and `mbus`; no direct ssh from the workstation to either | tmux session `rpi`, windows 2 and 3, each a mosh shell as `root@bydlicoin`. No ssh key |
+| **Transfer** | push, chunked base64 through the tmux pane | pull over HTTP, either direction |
+
+Add a column when you work on a target that has none. `tmux ls` is the first
+command of any session, because the sessions that exist are the access you have,
+and a window already running something is not a window to type into.
 
 ## Getting files there
 
+Two shapes, picked by what the target can reach:
+
+- **Push through a tmux pane** when there is no ssh and no route in. Chunked
+  base64, below.
+- **Let the target pull** when it can reach your machine over the network. One
+  command each side, no chunking, and it runs in either direction: the van
+  serves `bydlicoin.podgorny.cz:8899` when the workstation is the one that needs
+  a file.
+
+```bash
+# workstation, in the directory holding the tarball
+pgrep -f "http.server 8899" >/dev/null || \
+  (nohup python3 -m http.server 8899 --bind :: > /tmp/srv.log 2>&1 &)
+
+# target
+curl -fsS -o /tmp/mb.tgz http://duo.podgorny.cz:8899/mb.tgz && md5sum /tmp/mb.tgz
+```
+
+`--bind ::` is not optional: both hosts resolve to public IPv6 only
+(`duo.podgorny.cz` and `bydlicoin.podgorny.cz`), and that v6 address is also why
+inbound to the van works at all — CGNAT applies to its IPv4 only. Compare the
+md5 against the local file every time. The guard on the server matters more than
+it looks: a second `http.server` on a bound port dies quietly and the next
+`curl` serves the previous run's file.
+
+### Push through a tmux pane
+
 No scp. Pipe a tarball through the tmux pane as chunked base64 — chunks must
-stay well under the tty line limit:
+stay well under the tty line limit. Three things about driving a pane this way:
+`capture-pane` returns only the visible screen and scrollback, so a `clear` in
+the command destroys the evidence; long output goes to a file on the target and
+is read back in pieces; and a long-running loop piped through `tail` buffers
+until it exits, so poll a file instead.
 
 ```bash
 tar czf mb.tgz -C <repo>/custom_components <domain>
 base64 -w0 mb.tgz > mb.b64 && split -b 800 -d -a 3 mb.b64 chunk_
-tmux send-keys -t rpi400 'rm -f /tmp/mb.b64' Enter
+tmux send-keys -t <pane> 'rm -f /tmp/mb.b64' Enter
 for f in chunk_*; do
-  tmux send-keys -t rpi400 "printf '%s' '$(cat $f)' >> /tmp/mb.b64" Enter; sleep 0.3
+  tmux send-keys -t <pane> "printf '%s' '$(cat $f)' >> /tmp/mb.b64" Enter; sleep 0.3
 done
 ```
 
-Then decode on the far side and **compare sha256 against the local file** —
-this has never silently corrupted, but it is one `grep -c` to prove.
+`<pane>`, `<config>`, `<unit>` and `<container>` below come from the target's
+column. Filling them from memory is how code lands in the other site's config
+directory. Decode on the far side and **compare sha256 against the local
+file** — this has never silently corrupted, but it is one `grep -c` to prove.
 
 ```bash
-sudo rm -rf /docker_volumes/hass_hajenka/custom_components/<domain>
-sudo tar xzf /tmp/mb.tgz -C /docker_volumes/hass_hajenka/custom_components
-sudo systemctl restart hass-hajenka
+sudo rm -rf <config>/custom_components/<domain>
+sudo tar xzf /tmp/mb.tgz -C <config>/custom_components
+sudo systemctl restart <unit>
 ```
 
 Restart takes ~60 s (the unit stops the container with `-t 60` so the recorder
 can flush). Then check:
 
 ```bash
-sudo grep -i <domain> /docker_volumes/hass_hajenka/home-assistant.log | grep -icE "error|traceback"
+sudo grep -i <domain> <config>/home-assistant.log | grep -icE "error|traceback"
 ```
 
 Zero is the pass. `We found a custom integration <domain> which has not been
@@ -54,6 +97,19 @@ partial-upgrade territory on a box that small. Use a stdlib-only python bridge
 (`termios` for 2400 8E1, one client at a time) dropped in `/tmp` and run under
 `nohup`. It survives disconnect but **not a reboot** — nothing restarts it.
 
+## Long jobs must outlive the shell
+
+A mosh session over a van's uplink drops. Anything longer than a few seconds
+runs under its own transient unit, not in the pane:
+
+```bash
+systemd-run --unit=<name> --collect /root/<script>.sh
+systemctl is-active <name>          # and later: journalctl -u <name>
+```
+
+`--collect` clears the unit when it exits, so the same name is reusable on the
+next attempt instead of failing as already-loaded.
+
 ## Verifying without the UI
 
 Config entries cannot be created from a shell without an auth token, so the
@@ -61,11 +117,11 @@ user drives the UI. Everything else is inspectable:
 
 ```bash
 # the protocol module runs standalone inside the container
-sudo podman exec hass_hajenka python /config/custom_components/<domain>/api.py <args>
+sudo podman exec <container> python /config/custom_components/<domain>/api.py <args>
 
 # what actually got created
 sudo python3 -c "import json; from collections import Counter; \
-  e=json.load(open('/docker_volumes/hass_hajenka/.storage/core.entity_registry'))['data']['entities']; \
+  e=json.load(open('<config>/.storage/core.entity_registry'))['data']['entities']; \
   m=[x for x in e if x['platform']=='<domain>']; print(len(m), Counter(x['original_device_class'] for x in m))"
 ```
 

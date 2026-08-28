@@ -40,7 +40,8 @@ no local clone at all, and `~/sync` and `~/syncthing/rpodgorny` are one tree see
 twice.
 
 Read `references/traps.md` before debugging anything that "should work"; the
-deploy loop for the test rig is in `references/deploy.md`. **For anything BLE,
+deploy loop for any target, and the per-target values, are in
+`references/deploy.md`. **For anything BLE,
 read `references/bluetooth.md` first** — BLE breaks assumptions that hold for
 every wired protocol: the transport is chosen for you, it changes under you, and
 the device's identity arrives in pieces that not every transport delivers.
