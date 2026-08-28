@@ -1,13 +1,13 @@
 ---
 name: release
-description: Prepare a software release — run all pre-release checks (tests, lint, types, security audit), infer the version bump from conventional commits, update the manifest and changelog, check docs, create the release commit, and (after explicit user confirmation) create the local git tag. Stops BEFORE pushing or publishing so the user does those final actions manually. Use when the user says "release", "cut a release", "prepare a release", or invokes /release.
+description: Release preparation, local only — pre-release gates (tests, lint, types, audit), version bump inferred from conventional commits, manifest and changelog updates, release commit, git tag. Stops before any push or publish. Use when the user asks to cut or prepare a release.
 ---
 
 # Release
 
 Prepare a software release through the local tag step. Hand off to the user before anything is pushed or published.
 
-**Scope is local-only.** May create the release commit and (after explicit user confirmation) the local git tag. Never run `git push`, `cargo publish`, `npm publish`, `twine upload`, `gh release create`, or anything equivalent. Stop after the tag.
+**Scope is local-only.** May create the release commit and (after explicit user confirmation) the local git tag. Never run `git push`, `cargo publish`, `npm publish`, `twine upload`, `gh release create`, or anything equivalent — including when the user asks for it mid-flow, in which case hand them the commands to run themselves. Stop after the tag.
 
 Run the steps below in order. If any **gate** fails, stop immediately and report — do not continue to the next step. Steps marked **report-only** surface information but do not block.
 
@@ -68,13 +68,11 @@ Apply the **`changelog` skill** to turn that commit list into entries. It owns e
 
 **Do not edit any files in this step.** This is a read-only analysis plus an explicit confirmation.
 
-**CalVer is the rare exception, not the default.** Almost no project here uses date-based versions. A version that *looks* like a date is almost always ordinary SemVer/two-part numbers — `24.11` is two-part `major.minor`, NOT 2024-11. Never assume CalVer just because the numbers resemble a year or month, and never derive a version from today's date. If a version genuinely looks CalVer-ish (e.g. `26.07` would "conveniently" match the current month, or components track the calendar across past tags), do **extra sanity checks before treating it as CalVer**: inspect the tag history for a date-tracking pattern, and explicitly confirm the scheme with the user in the step-5 prompt. Only after that confirmation may you bump by date. Default is always the commit-driven rules below.
-
-**Detect the versioning scheme** from the current version string in the manifest. Count the dot-separated numeric components (ignore any `v` prefix and any pre-release/build suffix like `-rc1` or `+build`):
+**Detect the versioning scheme** from the current version string in the manifest. Count the dot-separated numeric components (ignore any `v` prefix and any `-rc1` / `+build` suffix):
 
 - **3+ parts** (`a.b.c`, `a.b.c.d`) → SemVer-style. Use the table below.
-- **2 parts** (`a.b`) → two-part scheme. First number is major (backwards-incompatible), second is bumped for both fixes and new features. There is no separate patch level. Treat as plain numbers, not `year.month`, unless CalVer is confirmed per the note above.
-- **1 part** (`a`) → ask the user how they want to bump; do not guess.
+- **2 parts** (`a.b`) → two-part scheme: first number major, second for both fixes and features. `24.11` is `major.minor`, **not** 2024-11.
+- **1 part**, or anything that looks like a date → `references/versioning.md`. Never derive a version from today's date; CalVer needs a tag history that proves it and the user's confirmation in this turn.
 
 Infer the bump level from conventional commit prefixes:
 
@@ -169,10 +167,3 @@ cargo publish          # or: npm publish / twine upload dist/* / gh release crea
 
 That's the hand-off. The skill ends here.
 
-## Invariants
-
-- **Local only.** The skill never pushes or publishes. Ever. Even if the user asks mid-flow — tell them to run those steps manually.
-- **Version requires explicit confirmation before any version-bump edits.** Step 5 gates steps 6+. Do not touch manifest files, lockfiles, version strings, or promote the changelog's unreleased section until the user has confirmed the version number in the current turn. The step-5 confirmation also authorizes the commit and tag in steps 9–10; do not prompt again for those.
-- **Gates are gates — with one judgment call.** Step 1's branch/remote checks and all of step 3 block on failure; never work around them, never use `--no-verify`. The lone exception is step 1's working-tree-clean check: a soft gate the user may consciously skip *after* you surface the uncommitted changes and judge their severity. Everything else stays hard.
-- **No guessing on ambiguity.** When the bump level, changelog convention, or version location is unclear, ask.
-- **Surgical commit.** Only manifest/lockfile/changelog/version-string files go into the release commit. No drive-by edits.

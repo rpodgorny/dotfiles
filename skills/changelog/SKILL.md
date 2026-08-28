@@ -1,6 +1,6 @@
 ---
 name: changelog
-description: Write or update a project's changelog — find the file, match its existing convention, turn commits into human-readable entries, and keep the unreleased section tidy. Use when the user says "update the changelog", "add a changelog entry", "write changelog", "changelog for these commits", or invokes /changelog. Also use as the changelog half of a release; /release calls into these same rules. Also use proactively, without being asked, once a user-visible change has landed (a feature, a bugfix, a changed default, a new or renamed option) in a repo that already has a changelog file, before or alongside committing it. Do not use for refactors, test-only changes, CI tweaks or formatting, and do not use in a repo with no changelog.
+description: Changelog entries a user of the software can read — find the file, match its convention, turn commits into entries, keep the unreleased section tidy. Use when the user asks for changelog work, when /release needs the changelog half of a release, and proactively once a user-visible change lands (feature, bugfix, changed default, new or renamed option) in a repo that already has a changelog.
 ---
 
 # Changelog
@@ -16,7 +16,7 @@ Look for `CHANGELOG.md`, `CHANGES.md`, or `HISTORY.md` (case-insensitive), usual
 - **Found none** — do NOT create one uninvited. Ask whether the user wants one; if the request was
   "add an entry" and no changelog exists, say so rather than inventing a format.
 
-## 2. Match the existing convention — never impose one
+## 2. The file is the style guide
 
 Detect the shape from the file itself:
 
@@ -54,9 +54,9 @@ git describe --tags --abbrev=0
 git log --oneline <last-tag>..HEAD
 ```
 
-Read the actual diffs when a commit subject is too terse to explain the user-visible effect. A
-subject like `fix(forms): keep edits in flight` tells you nothing about what the user was
-experiencing — the diff and the surrounding discussion do.
+Read the actual diffs when a commit subject is too terse to name the symptom. A subject like
+`fix(forms): keep edits in flight` tells you nothing about what the user was experiencing — the diff
+and the surrounding discussion do.
 
 Commits that change nothing observable — refactors, test-only changes, CI tweaks, formatting —
 usually get no entry. Don't pad the changelog to make a release look busy. If a release genuinely
@@ -68,8 +68,8 @@ has no user-visible changes, say so rather than manufacturing entries.
 or cut it. The whole story is already in the commit message and the diff, and that is where
 anyone who wants it will look. A changelog entry is a pointer into that history, not a retelling of it.
 
-**Say what changed, from the user's side.** Not the motivation, not the implementation, not the
-history of how you found the bug.
+**Say what changed, from the user's side.** The symptom, not the motivation, not the
+implementation, not the history of how you found the bug.
 
 - Bad: `Fixed a race condition in InputField's onbeforeupdate handler.`
 - Bad: `Users were complaining that recipe editing was unreliable, so we investigated and found that Mithril freezes vnode children...`
@@ -167,10 +167,8 @@ Match the repo's existing commit style — check `git log --oneline` first. Comm
 docs(changelog): <what>
 ```
 
-## Invariants
+## Done when
 
-- **The file's existing convention wins** over anything in this skill.
-- **No invented changelog.** If none exists, ask; don't create one as a side effect.
-- **No entries for invisible changes.** Refactors and test churn stay out.
-- **No guessing on reversibility.** If you can't tell whether a downgrade is safe, ask.
-- **Tagged sections are frozen.** Amend nothing that a tag points at.
+Every commit in range is either an entry or a change you can name as invisible, every
+irreversible one is flagged, and the result matches the file's existing convention —
+which wins over anything in this skill.

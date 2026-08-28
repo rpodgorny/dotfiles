@@ -285,3 +285,15 @@ What actually shows it:
 journalctl -u <unit> | grep 'finish process exit code 100'   # 100 = HA asked to restart
 ls -la <config>/home-assistant.log.1                          # rotated on every start
 ```
+
+## A local patch to a dependency reverts on every image change
+
+Fix the bug upstream instead. A patch applied to site-packages on the target
+is invisible, survives nothing, and silently reverts on every image change. If
+a stopgap is genuinely unavoidable while a PR is open: pin it to the **exact**
+library version, assert the expected number of occurrences for every
+substitution and refuse to apply on any mismatch (a half-patched module is far
+worse than an unpatched one), and delete it the moment upstream releases.
+Track the PRs somewhere durable — the stopgap outlives your memory of why it
+exists. Five upstream fixes to `renogy-ble`/`renogy-ha` retired one such
+patcher.

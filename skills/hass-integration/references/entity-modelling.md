@@ -110,3 +110,12 @@ hardware is on someone's bus.
 Forty devices is a wall no integration-side polish fixes. Point users at the
 Energy dashboard, the `utility_meter` helper for cycles and tariffs, and areas.
 Do not reimplement any of those.
+
+## Writes are optimistic until the poll agrees
+
+A converter or gateway queues a write until the target's turn comes round on
+*its* bus, so for seconds afterwards the device still reports the old value.
+Show the written value immediately, hold it with a TTL, and drop the overlay
+as soon as a poll returns it — or when the TTL expires, so a value the device
+rejected does not linger as a lie. Without it the card snaps back and then
+flips again, which reads as a broken write.

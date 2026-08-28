@@ -1,24 +1,20 @@
 ---
 name: hass-integration
 description: >
-  Conventions for building Radek's Home Assistant custom integrations
-  (hass-* repos): repo layout and naming, an HA-free protocol module that
-  doubles as a CLI dump tool, lookup-table entity modelling, config flow shape,
-  zero-dependency tests against captured device frames, brand assets and
-  attribution, commit and release habits, BLE/Bluetooth specifics (scanner
-  choice, proxies, device identification, repairs), and the HA traps already
-  paid for. Use when creating a new hass-* integration, adding entities or a
-  platform to an existing one, reviewing integration code, debugging one
-  against real hardware, or preparing one for HACS.
+  Conventions for Radek's hass-* Home Assistant integrations: an HA-free
+  protocol module that doubles as a CLI dump tool, lookup-table entity
+  modelling, tests against captured device frames, BLE specifics, and the HA
+  traps already paid for. Use when creating a hass-* integration, adding
+  entities or a platform to one, reviewing or debugging one against hardware,
+  or preparing one for HACS.
 ---
 
 # Home Assistant integrations, the way this repo family does it
 
-Applies to `~/sync/projects/hass-*`. Existing repos, newest first:
-`hass-meterbus` (protocol-scoped, the fullest example), `hass-truma-inetx`
-(BLE, push, ships its own dashboard card), `hass-netklima-rtu` (serial/TCP
-polling hub), `hass-climatix-ic` (cloud polling), `hass-tplink-m7200`
-(HTTP polling).
+Applies to `~/sync/projects/hass-*`. What the family *contains* comes from the
+enumeration below, never from a list typed here. What it cannot tell you is
+which repo to copy: `hass-meterbus` is the fullest example (protocol-scoped),
+`hass-truma-inetx` the one for BLE and push (it ships its own dashboard card).
 
 ## Before touching more than one repo
 
@@ -31,34 +27,23 @@ for d in ~/sync/projects/hass-*; do git -C $d fetch -q origin &&
   printf '%-22s %s\n' "$(basename $d)" "$(git -C $d status -sb | head -1)"; done
 ```
 
-Both halves have already gone wrong in one sitting:
+Both halves have gone wrong in one sitting: a hardcoded three-name loop silently
+skipped two repos, and three of five checkouts were behind their remote, one by
+four commits. Stale checkouts duplicate work — a whole "bring this repo up to
+standard" commit was written for changes that already existed upstream, and had
+to be thrown away. A repo that looks like it is missing CI is usually one that
+has not been pulled.
 
-- A hardcoded three-name loop **silently skipped two repos** during a
-  cross-repo change. Glob or enumerate; never type the names.
-- Three of five checkouts were **behind their remote**, one by four commits.
-  Work done against a stale checkout gets duplicated: an entire "bring the repo
-  up to standard" commit was written for changes that already existed upstream,
-  and had to be thrown away. A repo that looks like it is missing CI may simply
-  be a checkout that has not been pulled.
-- The list is not uniform. `hass-climatix-ic` had no local clone at all for a
-  while; `hass-tplink-m7200` is on `master` while the rest are on `main`;
-  `~/sync` and `~/syncthing/rpodgorny` are the same tree seen twice.
+The family is not uniform, so let the commands report rather than assuming:
+`hass-tplink-m7200` is on `master` while the rest are on `main`, a repo can have
+no local clone at all, and `~/sync` and `~/syncthing/rpodgorny` are one tree seen
+twice.
 
-Push failures here are the *good* case — they mean git caught the staleness.
-Fetch first and it never gets that far.
-
-Some of the hardest lessons here came from a device whose integration is *not*
-in this family: the Renogy BLE work was five upstream PRs to `renogy-ble` and
-`renogy-ha` rather than a new repo. Contributing upstream is often the right
-answer for a device someone already supports — the rule below on not carrying
-local patches came from exactly that.
-
-Read `references/entity-modelling.md` before designing entities and
-`references/traps.md` before debugging anything that "should work". The deploy
-loop for the test rig is in `references/deploy.md`. **For anything BLE, read
-`references/bluetooth.md` first** — BLE breaks assumptions that hold for every
-wired protocol: the transport is chosen for you, it changes under you, and the
-device's identity arrives in pieces that not every transport delivers.
+Read `references/traps.md` before debugging anything that "should work"; the
+deploy loop for the test rig is in `references/deploy.md`. **For anything BLE,
+read `references/bluetooth.md` first** — BLE breaks assumptions that hold for
+every wired protocol: the transport is chosen for you, it changes under you, and
+the device's identity arrives in pieces that not every transport delivers.
 
 ## Upstream skills — fetch, do not install
 
@@ -97,12 +82,15 @@ core's rules as informed argument, not as law — but never diverge silently.
    heat meters and an M-Bus-shaped search never found it, because it speaks a
    serial Ultraheat cable. Check `home-assistant/core/homeassistant/components/`
    directly; reading a core integration's `sensor.py` beats reading its docs.
-2. **Decide the scope boundary.** One integration per *protocol*, not per
-   vendor, whenever the protocol's payloads are self-describing. Custom
-   integrations cannot depend on each other (HACS does no dependency
-   resolution) and a shared port has exactly one owner, so splitting by vendor
-   creates problems that a lookup table solves for free. Split only when
-   payloads are vendor-invented, as with BLE.
+2. **Decide the scope boundary.** First ask whether it needs a repo at all:
+   when someone already supports the device, upstream PRs beat a new
+   integration — the Renogy BLE work was five PRs to `renogy-ble`/`renogy-ha`.
+   Then, one integration per *protocol*, not per vendor, whenever the
+   protocol's payloads are self-describing. Custom integrations cannot depend
+   on each other (HACS does no dependency resolution) and a shared port has
+   exactly one owner, so splitting by vendor creates problems that a lookup
+   table solves for free. Split only when payloads are vendor-invented, as
+   with BLE.
 3. **Confirm what the product is actually called** — from the label on the box
    and the manual's title page, not from the vendor's headline product page.
    Vendor naming is routinely inconsistent. One case: the box read
@@ -149,13 +137,16 @@ hass-<name>/
 
 ## The rules that matter
 
+Every rule here is applied, or waived in the commit body with the reason.
+
 **`api.py` imports no Home Assistant.** It is blocking, plain Python, takes a
 transport injection point for tests, and has a `_main()` so it runs standalone
 as a dump/scan tool. This is what makes the protocol testable offline and
 debuggable on the bench, and it is non-negotiable — every one of these repos
 has needed it.
 
-**Model with a table, not a hierarchy.** When a protocol is self-describing,
+**Model with a table, not a hierarchy.** Read `references/entity-modelling.md`
+before designing entities. When a protocol is self-describing,
 map `(what the record says it is) → presentation` in a dict of frozen
 dataclasses. Qualifiers (tariff, storage period, channel) decorate a row rather
 than adding rows. Unmapped records are skipped, which drops serial numbers and
@@ -181,14 +172,6 @@ the hardware falls off the bus, which is indistinguishable from working. This
 is exactly what HA's built-in Modbus platform does: it never checks the status
 register it is polling right next to.
 
-**Writes are optimistic until the poll agrees.** A converter or gateway queues
-a write until the target's turn comes round on *its* bus, so for seconds
-afterwards the device still reports the old value. Show the written value
-immediately, hold it with a TTL, and drop the overlay as soon as a poll returns
-it — or when the TTL expires, so a value the device rejected does not linger as
-a lie. Without it the card snaps back and then flips again, which reads as a
-broken write.
-
 **One place builds the client from stored config.** The config flow and
 `async_setup_entry` both need it, and spelled out in both they drift the day a
 setting is added. `client_from(entry.data)` in `coordinator.py`, imported by
@@ -198,16 +181,6 @@ both.
 failure it prevents, in prose, at the point of the decision. A comment that
 restates the code is deleted. Deliberate shortcuts get a `ponytail:` marker
 naming the ceiling and the upgrade path.
-
-**When the bug is in a `requirements` library, fix it upstream — do not carry a
-local patch.** A patch applied to site-packages on the target is invisible,
-survives nothing, and silently reverts on every image change. If a stopgap is
-genuinely unavoidable while a PR is open: pin it to the **exact** library
-version, assert the expected number of occurrences for every substitution and
-refuse to apply on any mismatch (a half-patched module is far worse than an
-unpatched one), and delete it the moment upstream releases. Track the PRs
-somewhere durable — the stopgap outlives your memory of why it exists.
-Five upstream fixes to `renogy-ble`/`renogy-ha` retired one such patcher.
 
 **Detection that depends on device-reported data needs a configured fallback.**
 Whatever the device tells you about itself — model string, manufacturer ID,
@@ -308,7 +281,8 @@ test and drive a read, a write and a read-back through it.
 - Brand assets go in `brand/` with the unmodified original kept alongside and
   an `ATTRIBUTION.md` recording owner, source URL, retrieval date, and exactly
   what was changed. Since HA 2026.3 these serve through the brands proxy, so no
-  `home-assistant/brands` submission is needed. Ship only what can be derived
+  `home-assistant/brands` submission is needed (checked 2026-08; re-check before
+  trusting it on a much older HA). Ship only what can be derived
   honestly: if the vendor publishes no vector there is **no `icon.svg`** —
   tracing one is redrawing their mark rather than using it. Prefer a plain crop
   to a recomposition, and record the crop in numbers (which rows and columns
@@ -389,6 +363,7 @@ it talks to, how it is reached, and the one thing that makes it worth having.*
 Topics are the four standard ones above plus protocol and domain terms. Copy
 the shape from `hass-netklima-rtu` or `hass-truma-inetx`; both already pass.
 
-`actions/checkout@v4` also warns that Node 20 is deprecated and is being forced
-onto Node 24. Still a warning, not yet a failure — but when it is bumped,
-bump it in **all** the hass-* repos at once rather than letting them drift.
+When a shared CI dependency has to move, move it in **all** the hass-* repos in
+one pass rather than letting them drift. Open item as of 2026-08:
+`actions/checkout@v4` warns that Node 20 is deprecated and is being forced onto
+Node 24, still a warning rather than a failure.
