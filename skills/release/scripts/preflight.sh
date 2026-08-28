@@ -70,6 +70,7 @@ if [ -n "$dirty" ]; then
     echo "DIRTY: working tree has uncommitted changes (excluding dot-prefixed paths):"
     echo "$dirty"
     echo "(soft gate) hard gates OK: on $branch, in sync with ${synced[*]}"
+    echo "next: run scripts/classify-untracked.sh, every ?? path needs a verdict"
     exit 2
 fi
 

@@ -19,14 +19,46 @@ Branch on the exit code:
 
 - **Exit 0** — hard gates pass and the tree is clean. Proceed to step 2.
 - **Exit 1** — a hard gate failed (wrong branch, or behind a remote). Stop and surface its output. Do not offer to stash or pull for the user.
-- **Exit 2** — hard gates pass but the working tree is dirty. Do **not** stop automatically — make it a judgment call:
-  1. **Print** the uncommitted changes the script listed (porcelain lines: first column = staged, second = unstaged; `??` = untracked).
-  2. **Judge the severity** yourself and state the call you're making and why:
-     - **Low / harmless** — untracked scratch files, logs, build artifacts, or edits confined to files unrelated to the release (notes, unrelated WIP). The surgical commit in step 9 won't touch these, and the pre-release checks in step 3 are unaffected.
-     - **High / concerning** — uncommitted or **staged** changes to files this release depends on: the manifest, version files, changelog, lockfiles, or source in the package being released. These can pollute the release commit, or mean step 3's checks ran against an unsaved state. Anything already staged is High by default.
-  3. **Let the user choose** with AskUserQuestion: **"Skip the dirty-tree gate and continue"** vs **"Stop the release"**. Lead with the option matching your judgment (mark it Recommended). If they skip, continue to step 2; if they stop, end here.
+- **Exit 2** — hard gates pass but the working tree is dirty. Do not stop automatically, and do not wave it through either. Work 1a and 1b below, then continue to step 2.
 
 Skipping the dirty-tree gate does **not** relax the surgical-commit invariant: in step 9 you still stage only manifest/lockfile/changelog/version-string files, never the pre-existing dirty changes.
+
+### 1a. Tracked changes
+
+Print the porcelain lines for tracked paths (first column = staged, second = unstaged). Judge severity and state the call you are making:
+
+- **Low** — edits confined to files unrelated to the release: notes, unrelated WIP.
+- **High** — uncommitted or **staged** changes to files this release depends on: the manifest, version files, changelog, lockfiles, or source in the package being released. These pollute the release commit, or mean step 3's checks ran against an unsaved state. Anything already staged is High by default.
+
+Then ask with AskUserQuestion: **"Skip the dirty-tree gate and continue"** vs **"Stop the release"**, leading with the option matching your judgment. If nothing tracked is modified, skip straight to 1b.
+
+A submodule whose only change is untracked content inside it shows as ` M` in a plain `git status`. Run `git diff --submodule=short` before calling that High. An empty diff means the pinned commit is unchanged and there is nothing to release.
+
+### 1b. Untracked paths
+
+**Untracked does not mean harmless, and this is where releases quietly go wrong.** Every `??` path is one of two very different things: something deleted on purpose that came back, or something written and never added. The second kind ships a release with a hole in it. In a porcelain listing the two look identical, so never judge the `??` block as a group and never dismiss it as "scratch files". None of these paths are in `.gitignore`, git is actively reporting them.
+
+Run `scripts/classify-untracked.sh`. It labels each path from git history and prints two signals: how many tracked files share its directory, and which tracked source files mention its name.
+
+Handle each class. **Every class except IGNORABLE needs a user decision. Do not batch them into one question, and do not reach step 2 with one unanswered.**
+
+| Class | What it means | Required outcome |
+|---|---|---|
+| `GHOST` | Tracked once, a commit deleted it, on-disk copy is byte-identical. It came back after a deliberate cleanup. | **Push to remove.** Name the deleting commit, its date and its subject. Offer deletion as the recommended option. Keeping it takes an explicit "keep it". |
+| `REVIVED` | Deleted, but the on-disk content differs. Could be real work re-added on top, could be a stale copy from another machine. | Show the printed diff and ask which it is. Do not guess. |
+| `LEFTOVER` | A commit deleted files under this path, content could not be compared (directory, or no parent commit). | Treat as `GHOST`, but say the comparison was unavailable. |
+| `NEW` | Never tracked in any branch. **The "forgot to `git add`" class.** | Ask the user to confirm, in as many words, that they are sure this should stay out of the release. Never infer it from the extension. |
+| `IGNORABLE` | Never tracked, matches a build or scratch pattern. | One summary line, no question. Suggest a `.gitignore` entry if it will recur. |
+
+For a `NEW` path, weigh both signals before asking and put your reading into the question:
+
+- **Referenced by tracked source** is the strongest tell. If a tracked test or module opens the file by name, the file is part of how this code behaves.
+- **Tracked siblings** means it sits in a directory git already manages, which is exactly where forgotten work lands.
+- Read the matched line instead of trusting the basename. A hit on `vendor/lodash.js` does not vindicate a stray `static/lodash.js`.
+
+Watch for one specific trap. A tracked test that guards an untracked file with `os.path.isfile(...)`, or any other existence check, takes one branch on this machine and the other branch on a clean clone. Step 3 then measures something CI will never run. Say so out loud when you see it.
+
+Resolve 1b before step 3, so the pre-release checks run against the state you are actually releasing.
 
 ## 2. Detect project type
 

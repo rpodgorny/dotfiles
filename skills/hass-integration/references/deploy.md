@@ -45,6 +45,10 @@ tested` is the normal load message, not a problem.
 
 ## Bridging the hardware
 
+Test protocol code on a real machine and keep the target dumb: bridge the serial
+port over TCP rather than installing a toolchain on it. That box OOM-kills a
+`pip install` after ten minutes.
+
 pokuston has no socat and no ser2net, and `pacman -Sy` on Arch is
 partial-upgrade territory on a box that small. Use a stdlib-only python bridge
 (`termios` for 2400 8E1, one client at a time) dropped in `/tmp` and run under
