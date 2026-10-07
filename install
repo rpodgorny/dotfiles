@@ -11,21 +11,21 @@ def do(from_, to_):
     to_ = os.path.expanduser(to_)
 
     if os.path.islink(to_):
-        logging.debug('%s already a symlink' % to_)
+        logging.debug(f"{to_} already a symlink")
         return
 
     if os.path.isfile(to_):
-        logging.info('%s already exists but is not a symlink' % to_)
+        logging.info(f"{to_} already exists but is not a symlink")
 
-        fn_rel = os.path.dirname(to_) + '/' + from_
+        fn_rel = os.path.dirname(to_) + "/" + from_
         if filecmp.cmp(fn_rel, to_):
-            logging.info('file contents are same, deleting %s' % to_)
+            logging.info(f"file contents are same, deleting {to_}")
             os.remove(to_)
         else:
-            logging.info('file contents differ, leaving %s intact' % to_)
+            logging.info(f"file contents differ, leaving {to_} intact")
             return
 
-    logging.info('linking %s to %s' % (from_, to_))
+    logging.info(f"linking {from_} to {to_}")
 
     # the try/except stuff is here only because of python 3.2
     try:
@@ -33,60 +33,60 @@ def do(from_, to_):
     except OSError:
         pass
 
-    cmd = 'ln -s %s %s' % (from_, to_)
+    cmd = f"ln -s {from_} {to_}"
     subprocess.call(cmd, shell=True)
 
 
 def main():
-    logging.basicConfig(level='INFO')
+    logging.basicConfig(level="INFO")
 
-    do('dotfiles/Xresources', '~/.Xresources')
-    do('dotfiles/agignore', '~/.agignore')
-    do('dotfiles/bash_profile', '~/.bash_profile')
-    do('dotfiles/bashrc', '~/.bashrc')
-    do('dotfiles/emacs', '~/.emacs')
-    do('dotfiles/hgrc', '~/.hgrc')
-    do('dotfiles/i3status.conf', '~/.i3status.conf')
-    do('dotfiles/gitconfig', '~/.gitconfig')
-    do('dotfiles/gitignore', '~/.gitignore')
-    do('dotfiles/makepkg.conf', '~/.makepkg.conf')
-    do('dotfiles/omnirun.conf', '~/.omnirun.conf')
-    do('dotfiles/tmux.conf', '~/.tmux.conf')
-    do('dotfiles/vimrc', '~/.vimrc')
-    do('dotfiles/xbindkeysrc', '~/.xbindkeysrc')
-    do('dotfiles/xinitrc', '~/.xinitrc')
-    do('dotfiles/zshrc', '~/.zshrc')
-    do('dotfiles/zprofile', '~/.zprofile')
+    do("dotfiles/Xresources", "~/.Xresources")
+    do("dotfiles/agignore", "~/.agignore")
+    do("dotfiles/bash_profile", "~/.bash_profile")
+    do("dotfiles/bashrc", "~/.bashrc")
+    do("dotfiles/emacs", "~/.emacs")
+    do("dotfiles/hgrc", "~/.hgrc")
+    do("dotfiles/i3status.conf", "~/.i3status.conf")
+    do("dotfiles/gitconfig", "~/.gitconfig")
+    do("dotfiles/gitignore", "~/.gitignore")
+    do("dotfiles/makepkg.conf", "~/.makepkg.conf")
+    do("dotfiles/omnirun.conf", "~/.omnirun.conf")
+    do("dotfiles/tmux.conf", "~/.tmux.conf")
+    do("dotfiles/vimrc", "~/.vimrc")
+    do("dotfiles/xbindkeysrc", "~/.xbindkeysrc")
+    do("dotfiles/xinitrc", "~/.xinitrc")
+    do("dotfiles/zshrc", "~/.zshrc")
+    do("dotfiles/zprofile", "~/.zprofile")
 
-    do('../dotfiles/btop', '~/.config/btop')
-    do('../dotfiles/ssh_config', '~/.ssh/config')
-    do('../dotfiles/i3_config', '~/.i3/config')
-    do('../dotfiles/ghostty', '~/.config/ghostty')
-    do('../dotfiles/gpg.conf', '~/.gnupg/gpg.conf')
-    do('../dotfiles/default.tigervnc', '~/.vnc/default.tigervnc')
-    do('../dotfiles/flake8', '~/.config/flake8')
-    do('../dotfiles/mpv', '~/.config/mpv')
-    do('../dotfiles/nvim', '~/.config/nvim')
-    do('../dotfiles/niri', '~/.config/niri')
-    do('../dotfiles/ruff', '~/.config/ruff')
-    do('../dotfiles/sway_config', '~/.sway/config')
-    do('../dotfiles/waybar', '~/.config/waybar')
+    do("../dotfiles/btop", "~/.config/btop")
+    do("../dotfiles/ssh_config", "~/.ssh/config")
+    do("../dotfiles/i3_config", "~/.i3/config")
+    do("../dotfiles/ghostty", "~/.config/ghostty")
+    do("../dotfiles/gpg.conf", "~/.gnupg/gpg.conf")
+    do("../dotfiles/default.tigervnc", "~/.vnc/default.tigervnc")
+    do("../dotfiles/flake8", "~/.config/flake8")
+    do("../dotfiles/mpv", "~/.config/mpv")
+    do("../dotfiles/nvim", "~/.config/nvim")
+    do("../dotfiles/niri", "~/.config/niri")
+    do("../dotfiles/ruff", "~/.config/ruff")
+    do("../dotfiles/sway_config", "~/.sway/config")
+    do("../dotfiles/waybar", "~/.config/waybar")
 
-    do('../../dotfiles/claude/statusline.sh', '~/.config/claude/statusline.sh')
-    do('../../dotfiles/config.fish', '~/.config/fish/config.fish')
-    do('../../dotfiles/foot.ini', '~/.config/foot/foot.ini')
-    do('../../dotfiles/kitty.conf', '~/.config/kitty/kitty.conf')
-    do('../../dotfiles/mc_ini', '~/.config/mc/ini')
-    do('../../dotfiles/opencode/plugin', '~/.config/opencode/plugin')
-    do('../../dotfiles/vlcrc', '~/.config/vlc/vlcrc')
+    do("../../dotfiles/claude/statusline.sh", "~/.config/claude/statusline.sh")
+    do("../../dotfiles/config.fish", "~/.config/fish/config.fish")
+    do("../../dotfiles/foot.ini", "~/.config/foot/foot.ini")
+    do("../../dotfiles/kitty.conf", "~/.config/kitty/kitty.conf")
+    do("../../dotfiles/mc_ini", "~/.config/mc/ini")
+    do("../../dotfiles/opencode/plugin", "~/.config/opencode/plugin")
+    do("../../dotfiles/vlcrc", "~/.config/vlc/vlcrc")
 
-    do('../../../dotfiles/fish_prompt.fish',
-       '~/.config/fish/functions/fish_prompt.fish')
-    do('../../../dotfiles/fish_right_prompt.fish',
-       '~/.config/fish/functions/fish_right_prompt.fish')
-    do('../../../dotfiles/__fish_print_hostnames.fish',
-       '~/.config/fish/functions/__fish_print_hostnames.fish')
+    do("../../../dotfiles/fish_prompt.fish",
+       "~/.config/fish/functions/fish_prompt.fish")
+    do("../../../dotfiles/fish_right_prompt.fish",
+       "~/.config/fish/functions/fish_right_prompt.fish")
+    do("../../../dotfiles/__fish_print_hostnames.fish",
+       "~/.config/fish/functions/__fish_print_hostnames.fish")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
