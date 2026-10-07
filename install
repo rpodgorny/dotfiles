@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-import logging
-import subprocess
 import filecmp
+import logging
 import os
+import subprocess
 
 
 def do(from_, to_):
