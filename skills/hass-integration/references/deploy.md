@@ -1,24 +1,32 @@
 # Deploy loop for a target
 
-There is more than one target: several sites, plus the Ducato van. The loop
-below is the same everywhere; what changes per target is the row in the table.
-Establish the row before deploying, and never assume the last target's values.
+There is more than one target. The loop below is the same everywhere; what
+changes per target is the column in the table. Establish the column before
+deploying, and never assume the last target's values.
 
 ## Targets
 
 Each target needs: the shell you reach it through, the HA host with its unit
 name and config path, the host the hardware hangs off, and how files get across.
 
-| | hajenka | ducato van |
+| | hajenka | bydlicoin (the van) |
 |---|---|---|
-| **HA host** | rpi400, rootful podman, container `hass_hajenka`, unit `hass-hajenka`, config `/docker_volumes/hass_hajenka` → `/config` | bydlicoin (aarch64 Arch Linux ARM), rootful podman, container `hass_bydlicoin`, unit `hass-bydlicoin.service`, config `/docker_volumes/hass_bydlicoin` → `/config` |
-| **Hardware** | pokuston, a separate box: USB M-Bus master on `/dev/ttyUSB0`. 423 MB RAM, no swap, install nothing on it | on the HA box itself: BLE through `hci0`, no serial devices at all. Installed: `renogy`, `truma_inetx`, `tplink_m7200`, `hacs` |
-| **Shells** | tmux sessions `rpi400` and `mbus`; no direct ssh from the workstation to either | tmux session `rpi`, windows 2 and 3, each a mosh shell as `root@bydlicoin`. No ssh key |
-| **Transfer** | push, chunked base64 through the tmux pane | pull over HTTP, either direction |
+| **HA host** | rpi400, rootful podman, container `hass_hajenka`, unit `hass-hajenka`, config `/docker_volumes/hass_hajenka` → `/config` | Arch aarch64, rootful podman, container `hass_bydlicoin`, unit `hass-bydlicoin`, config `/docker_volumes/hass_bydlicoin` → `/config`. Restart ~25 s |
+| **Hardware** | pokuston, a separate box: USB M-Bus master on `/dev/ttyUSB0`. 423 MB RAM, no swap, install nothing on it | Truma iNet X panel `50:98:93:FF:B4:D1`, a **public** address, bonded to hci0 (built-in bcm43438). hci1 is a TP-Link UB500; it and the ESP32 proxy are `disabled_by: user` on purpose — see the note below |
+| **Shells** | tmux sessions `rpi400` and `mbus`; no direct ssh from the workstation to either | a root shell in one window of the working tmux session; ssh by name does not resolve and key auth to `bydlicoin.podgorny.cz` is refused |
+| **Transfer** | push, chunked base64 through the tmux pane | same; a public HTTP drop is refused by the sandbox classifier, so do not plan on the pull route |
 
-Add a column when you work on a target that has none. `tmux ls` is the first
-command of any session, because the sessions that exist are the access you have,
-and a window already running something is not a window to type into.
+**Never re-enable a disabled adapter entry to make a target work.** On the van
+the proxy and the USB dongle are disabled deliberately: a local adapter is a
+configuration `hass-truma-inetx` is meant to support, so a failure there is a
+bug to diagnose, not a setup to correct. Ask before touching that config.
+
+Add a column when you work on a target that has none, and keep site-specific
+detail there rather than in the prose below. If the target has a shell only
+inside a tmux session, `tmux ls` is the first command of the session, because
+the sessions that exist are the access you have, and a window already running
+something is not a window to type into. Otherwise use ssh and ignore every tmux
+instruction here.
 
 ## Getting files there
 
@@ -27,9 +35,8 @@ Two shapes, picked by what the target can reach:
 - **Push through a tmux pane** when there is no ssh and no route in. Chunked
   base64, below.
 - **Let the target pull** when it can reach your machine over the network. One
-  command each side, no chunking, and it runs in either direction: the van
-  serves `bydlicoin.podgorny.cz:8899` when the workstation is the one that needs
-  a file.
+  command each side, no chunking, and it works in either direction — run the
+  server on whichever end holds the file.
 
 ```bash
 # workstation, in the directory holding the tarball
@@ -40,12 +47,12 @@ pgrep -f "http.server 8899" >/dev/null || \
 curl -fsS -o /tmp/mb.tgz http://duo.podgorny.cz:8899/mb.tgz && md5sum /tmp/mb.tgz
 ```
 
-`--bind ::` is not optional: both hosts resolve to public IPv6 only
-(`duo.podgorny.cz` and `bydlicoin.podgorny.cz`), and that v6 address is also why
-inbound to the van works at all — CGNAT applies to its IPv4 only. Compare the
-md5 against the local file every time. The guard on the server matters more than
-it looks: a second `http.server` on a bound port dies quietly and the next
-`curl` serves the previous run's file.
+`--bind ::` is not optional when either host resolves to public IPv6 only, and
+a v6 address is often the only reason an inbound connection works at all — a
+target behind CGNAT has no reachable IPv4. Compare the md5 against the local
+file every time. The guard on the server matters more than it looks: a second
+`http.server` on a bound port dies quietly and the next `curl` serves the
+previous run's file.
 
 ### Push through a tmux pane
 
@@ -55,6 +62,14 @@ stay well under the tty line limit. Three things about driving a pane this way:
 the command destroys the evidence; long output goes to a file on the target and
 is read back in pieces; and a long-running loop piped through `tail` buffers
 until it exits, so poll a file instead.
+
+Two more that cost time on the van. Redirect *every* command to a per-run file
+and read that back bounded: one long line (a single HA log entry listing every
+integration, a BlueZ cache of thousands of MACs) pushes the start marker out of
+the scrollback and the result cannot be recovered at all — and a fixed output
+filename makes `cat` of it truncate the very file being read. And send commands
+as **one line joined with `;`**: a multi-line `{ ... }` block sent in a single
+`send-keys` can hang the pane mid-block, needing a `C-c` to get the prompt back.
 
 ```bash
 tar czf mb.tgz -C <repo>/custom_components <domain>
@@ -99,8 +114,9 @@ partial-upgrade territory on a box that small. Use a stdlib-only python bridge
 
 ## Long jobs must outlive the shell
 
-A mosh session over a van's uplink drops. Anything longer than a few seconds
-runs under its own transient unit, not in the pane:
+A shell over a flaky uplink drops, and mosh over a mobile link drops often.
+Anything longer than a few seconds runs under its own transient unit, not in the
+pane:
 
 ```bash
 systemd-run --unit=<name> --collect /root/<script>.sh
