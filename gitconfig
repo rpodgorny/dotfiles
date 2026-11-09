@@ -26,3 +26,18 @@
 	directory = *
 [fetch]
 	parallel = 0
+
+[credential]
+	helper = store
+[sendemail]
+	smtpUser = radek@podgorny.cz
+	smtpServer = smtp.seznam.cz
+	smtpServerPort = 587
+	smtpEncryption = tls
+	confirm = always
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
